@@ -4,13 +4,13 @@ Real Estate | Technical Project Brief
 
 Track: Field-Based Scenario
 Client: Real estate stakeholders in Tashkent (buyers, sellers, agents, analysts)
-Purpose: Design and implement a supervised machine learning solution that predicts residential property prices in Tashkent to improve price transparency and support data-driven decisions in the local real estate market.
+Purpose: Design and implement a supervised machine learning solution that predicts residential property prices in Tashkent to improve price transparency and support data-driven decisions in the local [...]
 
 ---
 
 1. Client Background
 --------------------
-Tashkent is undergoing rapid urbanization, producing a dynamic and often opaque real estate market. Buyers, sellers, and local agents often rely on anecdotal knowledge and agent estimates when valuing properties, resulting in inconsistent pricing and negotiation inefficiencies. Market participants lack a widely accessible, data-driven price estimation tool to support fair negotiations and decision-making.
+Tashkent is undergoing rapid urbanization, producing a dynamic and often opaque real estate market. Buyers, sellers, and local agents often rely on anecdotal knowledge and agent estimates when val[...]
 
 2. Business Problem
 -------------------
@@ -23,7 +23,7 @@ The business need is a transparent, reproducible pricing tool that estimates pro
 
 3. Requested Solution
 ---------------------
-Develop a supervised regression solution to predict residential property prices in Tashkent using the publicly available "House Prices in Tashkent" dataset (Kaggle, Apache 2.0). Deliverables should include:
+Develop a supervised regression solution to predict residential property prices in Tashkent using the publicly available "House Prices in Tashkent" dataset (Kaggle, Apache 2.0). Deliverables shoul[...]
 - A reproducible end-to-end Colab notebook demonstrating data processing, model training, evaluation, and inference.
 - A saved model and preprocessing pipeline for inference (model.pkl).
 - Documentation (dataset license/notes, evaluation results, limitations).
@@ -55,9 +55,9 @@ Selected dataset and source | Dataset: "House Prices in Tashkent" (Kaggle). Sour
 What does one record / sample represent? | One record = single residential property listing in Tashkent with features and listed/recorded price.
 Proposed target or ML objective | Supervised regression. Target: Price (UZS). Objective: Predict numeric price from property features.
 Key information available at prediction / inference time | Location (district), Total_Area_sqm, Rooms, Floor, Total_Flats — all available at inference and do not rely on the target.
-Main data quality issues | Check for: missing values, inconsistent district names/spellings, outliers (area, price), invalid floor values, and imbalanced district representation. Numeric features may need scaling for some models.
+Main data quality issues | Check for: missing values, inconsistent district names/spellings, outliers (area, price), invalid floor values, and imbalanced district representation. Numeric features [...]
 Potential leakage risks | Avoid features derived from the target (e.g., price per sqm). If any target-derived encodings or post-sale metadata exist, exclude them to prevent leakage.
-Privacy / fairness / licensing concerns | Dataset is under Apache 2.0 and anonymized. Evaluate fairness by inspecting per-district error distributions — ensure model does not systematically under/overestimate specific neighborhoods.
+Privacy / fairness / licensing concerns | Dataset is under Apache 2.0 and anonymized. Evaluate fairness by inspecting per-district error distributions — ensure model does not systematically unde[...]
 
 6. Technical Proposal — Complete Before Full Implementation
 -----------------------------------------------------------
@@ -66,12 +66,12 @@ Decision / Question | Student Response
 :--- | :---
 ML problem formulation | Supervised regression: learn mapping f(features) → Price.
 Proposed baseline | Linear Regression (Ordinary Least Squares). Use Ridge variant as a robust baseline if regularization helps.
-Main modeling approach(es) to investigate | Linear Regression (baseline), Random Forest Regressor (tree ensemble), XGBoost Regressor (gradient boosting). Compare models and consider ensembling if beneficial.
-Data splitting / validation strategy | Hold-out: 80% train / 20% test. On training set use k-fold cross-validation (e.g., 5-fold) for hyperparameter tuning. Consider grouped or stratified splitting by Location if district distribution is skewed.
-Primary evaluation metric(s) and why | Primary: Root Mean Squared Error (RMSE) — interpretable in UZS. Secondary: R-squared (R²) and Mean Absolute Error (MAE) for outlier-robustness. Report per-district RMSE/MAE for fairness checks.
+Main modeling approach(es) to investigate | Linear Regression (baseline), Random Forest Regressor (tree ensemble), XGBoost Regressor (gradient boosting). Compare models and consider ensembling if [...]
+Data splitting / validation strategy | Hold-out: 80% train / 20% test. On training set use k-fold cross-validation (e.g., 5-fold) for hyperparameter tuning. Consider grouped or stratified splittin[...]
+Primary evaluation metric(s) and why | Primary: Root Mean Squared Error (RMSE) — interpretable in UZS. Secondary: R-squared (R²) and Mean Absolute Error (MAE) for outlier-robustness. Report per[...]
 Expected inference input | JSON or dict with: { Location, Total_Area_sqm, Rooms, Floor, Total_Flats }. Input is preprocessed with same pipeline used in training.
 Expected inference output | Single numeric predicted Price (UZS). Additionally, return a confidence estimate (e.g., prediction interval or a flag if input is out-of-distribution).
-Main technical risks / assumptions | Dataset representativeness for current market; limited features (no year built, condition) constrain granularity; sparse data in some districts may limit accuracy.
+Main technical risks / assumptions | Dataset representativeness for current market; limited features (no year built, condition) constrain granularity; sparse data in some districts may limit accur[...]
 
 7. Functional Requirements
 --------------------------
@@ -169,9 +169,3 @@ Appendix — Quick Implementation Notes
   - Pinned dependencies in requirements.txt.
   - Fixed random seeds for model training and CV folds.
   - Step-by-step README with instructions to run demo.ipynb in Colab.
-
-
-If you want, I can now:
-- (A) Update README.md to link to this brief and demo notebook, or
-- (B) Produce a one-page PDF or slide-ready summary of this brief, or
-- (C) Insert final numeric results (test RMSE, R²) after you run experiments and provide the numbers.
