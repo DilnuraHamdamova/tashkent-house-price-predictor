@@ -107,7 +107,7 @@ Click the Colab badge above and choose **Runtime → Run all**. The notebook clo
 ├── artifacts/                  # Saved pipeline and metrics
 ├── reports/                    # Data audit, results, error analysis
 ├── docs/                       # Evidence matrix, pitch, Q&A, action plan
-├── presentation/               # PPTX, browser-viewable PDF and slide previews
+├── presentation/               # Complete defense PDF and editable PPTX
 ├── scripts/                    # Reproducible presentation builder
 ├── src/                        # Reusable load/train/predict code
 ├── tests/                      # Validation and inference tests
