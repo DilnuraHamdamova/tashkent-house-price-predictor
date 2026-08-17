@@ -3,6 +3,8 @@
 [![CI](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/actions/workflows/ci.yml/badge.svg)](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/actions/workflows/ci.yml)
 [![Open demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/DilnuraHamdamova/tashkent-house-price-predictor/blob/main/demo.ipynb)
 
+**[View presentation](presentation/README.md)** · **[Download PowerPoint](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/raw/refs/heads/main/presentation/Tashkent_House_Price_Defense.pptx)** · **[Open PDF](presentation/Tashkent_House_Price_Defense.pdf)**
+
 An end-to-end regression capstone that estimates the advertised price of a Tashkent apartment from its district, size, room/floor information, and coordinates. The repository includes data documentation, reproducible model comparison, protected-test evaluation, a saved inference pipeline, input validation, tests, and a clean Google Colab demo.
 
 **Selected track:** Individual Project Track
@@ -105,7 +107,7 @@ Click the Colab badge above and choose **Runtime → Run all**. The notebook clo
 ├── artifacts/                  # Saved pipeline and metrics
 ├── reports/                    # Data audit, results, error analysis
 ├── docs/                       # Evidence matrix, pitch, Q&A, action plan
-├── presentation/               # Editable defense PPTX and PDF backup
+├── presentation/               # PPTX, browser-viewable PDF and slide previews
 ├── scripts/                    # Reproducible presentation builder
 ├── src/                        # Reusable load/train/predict code
 ├── tests/                      # Validation and inference tests
