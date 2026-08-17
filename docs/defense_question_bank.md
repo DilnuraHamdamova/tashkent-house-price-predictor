@@ -1,0 +1,24 @@
+# Defense question bank
+
+Answer pattern: **direct answer → exact evidence → limitation or next step**. Never guess.
+
+| Likely question | Direct answer | Exact evidence to open | Honest limitation / next step |
+|---|---|---|---|
+| Why is this regression? | The target is a continuous USD listing price. | `README.md` → “Problem and scope” | It predicts asking price, not transaction value. |
+| Who is the user? | Buyers, sellers, agents, and analysts needing a historical reference estimate. | `submission/PROJECT_BRIEF.md` → “Problem” | Not suitable for lenders, tax authorities, or legal appraisers. |
+| Where did the data come from? | A CC0 Kaggle copy of 2019 uybor.uz Tashkent listings. | `data/README.md` → “Source and license” | Historical advertisements may not represent today's market. |
+| Why is the currency USD? | The verified source dataset defines `price` in USD. | `data/README.md` → “Schema” | Earlier UZS wording was corrected; no currency conversion is performed. |
+| What did you clean? | I remove 696 exact duplicate rows before splitting and validate all required values and floor relationships. | `reports/data_audit.md`; `src/data.py` → `load_dataset` | Outliers were retained because source verification cannot label them errors. |
+| How did you prevent leakage? | Duplicate removal precedes splitting; no target-derived features are used; encoding/scaling are inside CV pipelines; test data is not used for selection. | `src/model.py` → `_preprocessor`, `train_best_model`; `reports/data_audit.md` | Repeated real properties not caught as exact duplicates may still exist. |
+| Why stratify by district? | District representation is uneven, so stratification improves coverage in train/test and each CV fold. | `reports/data_audit.md`; `src/model.py` → split definitions | Bektemir and Yangihayot remain too small for stable slice claims. |
+| What is the baseline? | Median Dummy Regressor, which ignores features and predicts the training median. | `src/model.py` → `candidate_models`; `reports/model_comparison.csv` | It is intentionally simple, providing a minimum reference. |
+| Why Random Forest? | It had the lowest training-only CV MAE: $11,108 versus $12,099 Gradient Boosting and $15,580 Log Ridge. | `reports/model_comparison.csv` | It is larger and less interpretable than Ridge; permutation/SHAP analysis is future work. |
+| Why did Log Ridge have weak R²? | A mostly additive relationship cannot represent the location/size interactions and luxury-price tails as well as tree ensembles. | `reports/model_comparison.csv`; `reports/results.md` | This is an inference from results, not proof of causality. |
+| Which metric matters most? | MAE is primary because its dollar error is understandable; RMSE exposes large misses, R² explains relative variance, and MAPE gives percentage context. | `README.md` → “Problem and scope”; `reports/results.md` | MAPE can overemphasize low-price listings, so it is supporting only. |
+| Was the final result unseen? | Yes. Selection used CV on 80% development data; the chosen model was then evaluated once on a protected 20% test set. | `src/model.py` → `train_best_model`; `artifacts/metrics.json` → selection rule | The final deployable artifact is refit on all rows only after test evaluation. |
+| What is the biggest error? | A $800,000 Mirobod listing was underpredicted by about $445,038. | `reports/largest_errors.csv`, first row | Missing condition/building prestige likely matters, but the dataset cannot verify the cause. |
+| Is performance equal across districts? | No. Chilonzor is much stronger than sparse/high-end districts; sample count must accompany every slice metric. | `reports/district_metrics.csv`; `reports/results.md` → “District slices” | Slice differences diagnose reliability, not discrimination or causality. |
+| What happens with bad input? | Impossible floors raise an error; unseen districts and out-of-training-range values return warnings. | `demo.ipynb` → cells 6 and 8; `tests/test_data.py`, `tests/test_model.py` | Valid-looking but unrealistic combinations may still pass basic rules. |
+| Can it predict current prices? | No. It estimates historical 2019 asking prices only. | `README.md` → “Limitations and responsible use” | Current data and time-aware recalibration are required. |
+| How is privacy handled? | The dataset has property features/approximate location but no direct seller identity, and demo inputs are not stored. | `README.md` → “Limitations and responsible use”; `data/README.md` | Coordinates still carry neighborhood sensitivity and potential location bias. |
+| How did AI assistance affect the work? | AI assisted with scaffolding, review, tests, and documentation; assistance is disclosed and every claim is tied to reproducible evidence. | `README.md` → “Author and assistance disclosure” | The student must understand and defend every submitted component. |

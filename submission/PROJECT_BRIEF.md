@@ -1,9 +1,9 @@
-# Field-Based Capstone Project Brief
+# Individual Project Brief
 
 ## Project information
 
 - **Student:** Dilnura Hamdamova
-- **Track:** Field-Based Scenario — Real Estate
+- **Track:** Individual Project Track
 - **Title:** Tashkent House Price Predictor
 - **Repository:** https://github.com/DilnuraHamdamova/tashkent-house-price-predictor
 - **ML task:** supervised tabular regression

@@ -5,6 +5,10 @@
 
 An end-to-end regression capstone that estimates the advertised price of a Tashkent apartment from its district, size, room/floor information, and coordinates. The repository includes data documentation, reproducible model comparison, protected-test evaluation, a saved inference pipeline, input validation, tests, and a clean Google Colab demo.
 
+**Selected track:** Individual Project Track
+
+**Student:** Dilnura Hamdamova
+
 ## Problem and scope
 
 Buyers, sellers, and real-estate analysts need a quick reference estimate in a market with limited price transparency. The ML task is supervised regression:
@@ -25,6 +29,22 @@ The training loader removes 696 exact duplicates, leaving 6,725 rows. There are 
 ## Method
 
 The split is fixed with `random_state=42`: 80% development data and a protected 20% test set, stratified by district. Model selection uses only five-fold district-stratified cross-validation on the development split. All encoders/scalers live inside scikit-learn pipelines, preventing preprocessing leakage. After final test evaluation, the selected pipeline is refitted on all de-duplicated rows for inference.
+
+### System architecture
+
+```text
+Raw CSV / raw apartment input
+          ↓
+Schema and range validation → exact-duplicate removal (training only)
+          ↓
+Floor-ratio feature + district one-hot encoding inside sklearn Pipeline
+          ↓
+Baseline / Ridge / Random Forest / Gradient Boosting comparison
+          ↓
+Training-only cross-validation → protected test evaluation
+          ↓
+Saved preprocessing + Random Forest pipeline → validated USD prediction + warnings
+```
 
 | Experiment | CV MAE (USD) | CV RMSE (USD) | CV R² |
 |---|---:|---:|---:|
@@ -69,8 +89,8 @@ Run quality checks:
 
 ```bash
 python -m pip install -r requirements-dev.txt
-pytest
-ruff check src tests
+python -m pytest
+ruff check src tests scripts
 ```
 
 ## Colab demo
@@ -84,6 +104,9 @@ Click the Colab badge above and choose **Runtime → Run all**. The notebook clo
 ├── notebooks/                  # EDA and experiment notebooks
 ├── artifacts/                  # Saved pipeline and metrics
 ├── reports/                    # Data audit, results, error analysis
+├── docs/                       # Evidence matrix, pitch, Q&A, action plan
+├── presentation/               # Editable defense PPTX and PDF backup
+├── scripts/                    # Reproducible presentation builder
 ├── src/                        # Reusable load/train/predict code
 ├── tests/                      # Validation and inference tests
 ├── submission/                 # Project brief and LMS submission document
@@ -99,8 +122,13 @@ Click the Colab badge above and choose **Runtime → Run all**. The notebook clo
 - Sparse districts have unstable slice metrics; the model should not be used to compare or rank residents.
 - Important factors such as renovation quality, building age, legal status, and market date are absent.
 - Coordinates can create location bias, and the model may reproduce historical price inequalities.
+- The published dataset contains property attributes and approximate locations but no seller names, phone numbers, credentials, or other direct personal identifiers. The project does not add or retain user-submitted prediction inputs.
 - Predictions require human review and comparable listings. Do not use this educational model for lending, taxation, legal appraisal, or high-stakes financial decisions.
 
 ## Author and assistance disclosure
 
-**Dilnura Hamdamova** — Individual capstone project. AI coding assistance was used for scaffolding, review, testing support, and documentation. The author remains responsible for verifying, understanding, and defending the submitted work.
+**Dilnura Hamdamova** — Individual Project Track. AI coding assistance was used for scaffolding, review, testing support, and documentation. The author remains responsible for verifying, understanding, and defending the submitted work.
+
+## Defense evidence
+
+The [evidence matrix](docs/evidence_matrix.md) maps every rubric criterion to an exact repository location. The [five-minute pitch](docs/defense_pitch_outline.md), [question bank](docs/defense_question_bank.md), [action plan](docs/action_plan.md), [clean-run record](reports/clean_run_check.md), and slides under `presentation/` form the defense preparation pack.
