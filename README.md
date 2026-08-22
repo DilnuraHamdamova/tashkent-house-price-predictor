@@ -5,7 +5,8 @@
 
 **[View presentation](presentation/README.md)** · **[PowerPoint](presentation/Tashkent_House_Price_Defense.pptx)** · **[PDF](presentation/Tashkent_House_Price_Defense.pdf)**
 
-**[Bugungi pitch uchun to‘liq o‘zbekcha qo‘llanma va exact English speech](docs/defense_day_guide_uz.md)**
+**[Bugungi pitch uchun to‘liq o‘zbekcha qo‘llanma](docs/defense_day_guide_uz.md)** ·
+**[Exact five-minute English speech](docs/defense_pitch_script_en.md)**
 
 An end-to-end regression capstone that estimates the advertised USD asking price of a Tashkent
 apartment from current August 2026 listing attributes. The repository includes a reproducible
