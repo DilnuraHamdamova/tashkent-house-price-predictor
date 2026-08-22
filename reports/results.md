@@ -1,43 +1,64 @@
-# Experiment results and error analysis
+# 2026 experiment results and error analysis
 
 ## Protocol
 
-After removing exact duplicates, 6,725 rows remain. A fixed 80/20 district-stratified split creates 5,380 development rows and 1,345 protected test rows. Five-fold district-stratified CV on development data selects the lowest-MAE non-dummy model. Encoders and scalers are fit inside each fold through scikit-learn pipelines.
+After validation and exact feature + target deduplication, 4,214 rows remain in 3,840 identical-
+feature groups. A fixed district-stratified group split creates 3,379 development rows (3,072
+groups) and 835 protected test rows (768 groups). Five-fold `StratifiedGroupKFold` on development
+data selects the lowest-MAE non-dummy model. Encoders and scalers are fit inside each fold.
 
 ## Cross-validation experiments
 
-| Model | Main hypothesis | CV MAE ± SD | CV RMSE | CV R² |
-|---|---|---:|---:|---:|
-| Median baseline | Reference price without features | $25,220 ± $1,030 | $47,276 | -0.081 |
-| Log Ridge | Additive, regularized relationships; log target limits skew | $15,580 ± $1,230 | $47,449 | -0.248 |
-| Random Forest | Non-linear interactions and local market segments | **$11,108 ± $745** | **$23,289** | **0.736** |
-| Gradient Boosting | Sequential non-linear residual correction | $12,099 ± $660 | $25,473 | 0.685 |
+| Model | CV MAE ± SD | CV RMSE | CV R² |
+|---|---:|---:|---:|
+| Median baseline | $55,604 ± $6,428 | $123,587 | -0.068 |
+| Log Ridge | $38,301 ± $6,705 | $105,755 | 0.219 |
+| **Random Forest** | **$31,298 ± $3,252** | **$80,394** | **0.556** |
+| Gradient Boosting | $33,545 ± $5,185 | $94,081 | 0.396 |
 
-Random Forest is selected solely from CV MAE.
+Random Forest is selected only from development CV MAE.
 
-## Protected test evaluation
+## Protected unseen test evaluation
 
 | Model | MAE | RMSE | R² | MAPE |
 |---|---:|---:|---:|---:|
-| Median baseline | $24,217 | $47,235 | -0.062 | 38.56% |
-| Random Forest | **$10,573** | **$23,162** | **0.745** | **16.66%** |
+| Median baseline | $50,900 | $107,189 | -0.058 | 46.39% |
+| **Random Forest** | **$27,195** | **$58,887** | **0.681** | **24.58%** |
 
-The selected model improves MAE by 56.3%. The gap between MAE and RMSE shows that a small number of luxury or anomalous listings still produce very large residuals.
+The selected model improves MAE by 46.6% and meets the predefined thresholds. The large gap
+between MAE and RMSE shows that a small luxury tail still causes very large errors.
 
-## Largest errors
+## Largest concrete failure
 
-| District / property | Actual | Predicted | Absolute error | Interpretation |
-|---|---:|---:|---:|---|
-| Mirobod, 456 m², 10 rooms | $800,000 | $354,962 | $445,038 | Extreme luxury listing is underpredicted |
-| Mirobod, 280 m², 2 rooms | $48,000 | $222,024 | $174,024 | Unusual size/room/price combination |
-| Mirzo Ulugbek, 190 m², 4 rooms | $365,000 | $193,545 | $171,455 | High-end listing underpredicted |
-| Mirobod, 110 m², 3 rooms | $295,000 | $141,854 | $153,146 | Likely unobserved condition/building premium |
-| Mirobod, 152 m², 4 rooms | $380,000 | $228,085 | $151,915 | High-end listing underpredicted |
+A Shayhontohur new-build listing with 3 rooms, 160 m², floor 2/9, and a $1,000,000 asking price is
+predicted near $234,461: an underprediction of about $765,539. The dataset cannot establish why;
+unobserved condition, exact building, amenities, prestige, or an inaccurate source price may be
+responsible. These are hypotheses, not causal findings.
 
 ## District slices
 
-Strong represented-district results include Chilonzor MAE $5,844 (R² 0.798), Uchtepa MAE $5,951 (R² 0.639), and Yunusobod MAE $9,332 (R² 0.731). Mirobod is hardest (MAE $23,531) because it contains several high-price outliers. Bektemir has only 2 test rows and Yangihayot 3, so their slice scores must not be generalized.
+| District | Test rows | MAE | R² | MAPE |
+|---|---:|---:|---:|---:|
+| Sergeli | 83 | $11,365 | 0.254 | 18.79% |
+| Bektemir | 68 | $12,998 | -1.777 | 22.54% |
+| Uchtepa | 77 | $13,422 | 0.563 | 22.44% |
+| Yashnobod | 59 | $14,089 | 0.550 | 18.48% |
+| Chilonzor | 68 | $16,940 | -0.659 | 25.72% |
+| Olmazor | 86 | $18,287 | 0.490 | 20.97% |
+| Mirzo Ulugbek | 42 | $21,811 | 0.549 | 19.59% |
+| Yunusobod | 131 | $27,583 | 0.659 | 25.46% |
+| Yakkasaroy | 78 | $37,397 | 0.463 | 25.78% |
+| Mirobod | 31 | $52,143 | 0.506 | 36.04% |
+| Shayhontohur | 112 | $64,541 | 0.668 | 33.74% |
+
+Negative slice R² in Bektemir and Chilonzor means that, within those test slices, the model is
+worse than predicting that slice's mean despite relatively modest MAE. Slice evidence must be
+shown with sample counts and multiple metrics, not summarized as equal performance.
 
 ## Conclusion
 
-The model meets the predefined thresholds but is not appraisal-grade. The clearest improvements would come from current transaction data plus building condition, construction year, renovation, legal status, and listing date. Repeated collection over time would also support a time-aware split and market adjustment.
+The model is useful as an educational 2026 asking-price reference, not an appraisal. The clearest
+improvements are verified transaction prices, exact neighborhood/building signal, condition,
+renovation, construction year, legal status, and a later time-based holdout. A scheduled data
+refresh would require retraining and new reported metrics rather than silently calling this
+snapshot permanently current.

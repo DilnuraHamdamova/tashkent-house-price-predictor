@@ -14,7 +14,7 @@ from sklearn.dummy import DummyRegressor
 from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, r2_score
-from sklearn.model_selection import StratifiedKFold, cross_validate, train_test_split
+from sklearn.model_selection import StratifiedGroupKFold, cross_validate, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
@@ -100,15 +100,35 @@ def train_best_model(features: pd.DataFrame, target: pd.Series) -> tuple[Any, di
     if len(features) < 100:
         raise ValueError("At least 100 rows are required for model training")
 
-    train_x, test_x, train_y, test_y = train_test_split(
-        features,
-        target,
+    feature_groups = pd.util.hash_pandas_object(features, index=False).astype(str)
+    group_frame = pd.DataFrame(
+        {"group": feature_groups, "district": features["district"].astype(str)}
+    ).drop_duplicates("group")
+    train_groups, test_groups = train_test_split(
+        group_frame,
         test_size=TEST_SIZE,
         random_state=RANDOM_STATE,
-        stratify=features["district"],
+        stratify=group_frame["district"],
     )
-    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
-    splits = list(cv.split(train_x, train_x["district"]))
+    train_mask = feature_groups.isin(train_groups["group"])
+    test_mask = feature_groups.isin(test_groups["group"])
+    train_x, test_x = features.loc[train_mask], features.loc[test_mask]
+    train_y, test_y = target.loc[train_mask], target.loc[test_mask]
+    train_feature_groups = feature_groups.loc[train_mask]
+    cv = StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
+    splits = list(
+        cv.split(train_x, train_x["district"], groups=train_feature_groups)
+    )
+    holdout_group_overlap = len(set(train_groups["group"]) & set(test_groups["group"]))
+    cv_group_overlap_max = max(
+        len(
+            set(train_feature_groups.iloc[fold_train])
+            & set(train_feature_groups.iloc[fold_validation])
+        )
+        for fold_train, fold_validation in splits
+    )
+    if holdout_group_overlap or cv_group_overlap_max:
+        raise RuntimeError("Feature groups overlap across an evaluation boundary")
     models = candidate_models()
     experiments: dict[str, dict[str, float]] = {}
 
@@ -169,9 +189,19 @@ def train_best_model(features: pd.DataFrame, target: pd.Series) -> tuple[Any, di
         "row_count": int(len(features)),
         "train_row_count": int(len(train_x)),
         "test_row_count": int(len(test_x)),
+        "train_group_count": int(len(train_groups)),
+        "test_group_count": int(len(test_groups)),
+        "holdout_group_overlap": holdout_group_overlap,
+        "cv_group_overlap_max": cv_group_overlap_max,
         "feature_columns": list(FEATURE_COLUMNS),
-        "target": "price_usd",
-        "selection_rule": "lowest 5-fold stratified CV MAE on the 80% training split",
+        "target": "listing_price_usd",
+        "selection_rule": (
+            "lowest 5-fold district-stratified, feature-group-safe CV MAE "
+            "on the 80% development groups"
+        ),
+        "split_rule": (
+            "identical apartment feature fingerprints stay in one split for holdout and CV"
+        ),
         "experiments": experiments,
         "protected_test_comparison": test_comparison,
         "district_test_metrics": district_metrics,

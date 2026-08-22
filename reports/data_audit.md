@@ -1,23 +1,79 @@
-# Data quality audit
+# 2026 data audit
 
-The audit was run on `data/house_prices.csv` before model development.
+## Snapshot identity
 
-| Check | Result | Decision |
-|---|---:|---|
-| Rows / columns | 7,421 / 9 | Sufficient for a compact tabular capstone |
-| Missing required values | 0 | No imputation required for current data; pipeline still validates input |
-| Exact duplicates | 696 | Remove before splitting to prevent train/test duplication leakage |
-| Districts | 12 | Use one-hot encoding; stratify split and CV by district |
-| Invalid floor (`level > max_levels`) | 0 | Reject such values during inference |
-| Size range | 14–456 m² | Keep and emit out-of-range warnings at inference |
-| Price range | $10,500–$800,000 | Keep rare listings; report RMSE and error cases |
-| Coordinate ranges | 41.186–41.425, 69.149–69.589 | Validate geographic number ranges and warn outside training range |
+- Source: HATA public Tashkent apartment-sale catalog
+- Collected: 22 August 2026 (Asia/Samarkand)
+- Listing dates: 4–21 August 2026
+- Parsed unique complete-feature rows: 4,867
+- Direct seller identity/contact/image/description retained: none
 
-## Issue log
+## Schema and missingness
 
-1. **Duplicate advertisements:** could leak identical rows across random splits and inflate performance. Exact duplicates are removed before splitting.
-2. **Uneven districts:** Bektemir has 8 source rows and Yangihayot 14, so their metrics are unstable. Split/CV are stratified, and the limitation is reported.
-3. **Outliers:** 565 prices are outside the conventional 1.5×IQR fence. They may be luxury listings or errors; no automatic deletion is defensible without source verification.
-4. **Address leakage/memorization:** approximate address has high cardinality. It is excluded; district and coordinates provide reusable location information.
-5. **Historical asking prices:** values are 2019 advertisements in USD, not current sale prices. The system is explicitly an educational historical estimator.
-6. **No hidden test tuning:** model selection uses only training-fold MAE. The protected test is evaluated after selection.
+The collector requires district, rooms, size, apartment floor, building floors, building type,
+listing date, USD asking price, listing ID, and source URL. It skipped 477 catalog cards that did
+not expose every required model field. The resulting CSV has no missing required values.
+
+## Validity rules
+
+Rules were set before evaluation and implemented in `src/data.py`:
+
+| Field | Accepted rule |
+|---|---|
+| Rooms | 1–20 |
+| Area | 15–1,000 m² |
+| Apartment floor | 1–50 |
+| Building floors | 1–50 |
+| Floor relationship | apartment floor ≤ building floors |
+| Building type | 0 resale or 1 new build |
+| Asking price | $10,000–$5,000,000 |
+
+These rules remove 257 obvious rental/category/currency/unit errors. They intentionally retain
+rare luxury apartments rather than deleting rows by an outcome-driven IQR threshold.
+
+## Duplicate and leakage controls
+
+- Exact feature + target duplicates removed: 396
+- Rows used for modeling: 4,214
+- Unique feature fingerprints: 3,840
+
+The fingerprint is `district + rooms + size_m2 + level + max_levels + is_new_building`.
+All rows with an identical fingerprint stay in the same protected holdout group and the same CV
+fold. This prevents exact-feature leakage even when asking prices differ. It is conservative—it
+may group different apartments with identical attributes—but it cannot detect every relisting
+whose feature values were edited.
+
+## Distribution and representation
+
+| District | Modeling rows |
+|---|---:|
+| Yunusobod | 630 |
+| Shayhontohur | 619 |
+| Olmazor | 415 |
+| Sergeli | 407 |
+| Yakkasaroy | 404 |
+| Uchtepa | 399 |
+| Bektemir | 346 |
+| Chilonzor | 327 |
+| Yashnobod | 302 |
+| Mirzo Ulugbek | 207 |
+| Mirobod | 158 |
+
+Yangihayot is absent, so any prediction there must be treated as out of distribution. The median
+cleaned listing has 3 rooms, 68 m², and an asking price of $85,000. The retained target remains
+right-skewed because expensive current listings are legitimate parts of the advertised market.
+
+## Leakage risks considered
+
+- Price per m² is excluded because it directly contains the target.
+- Target price is not used to define feature groups or splits.
+- Encoding/scaling is fit inside each CV pipeline.
+- Protected test groups are not used for model selection.
+- Source IDs, URLs, and listing dates are audit-only, not model features.
+
+## Remaining limitations
+
+HATA labels are advertiser-provided asking prices, not verified sales. Exact address, renovation,
+condition, building year, legal status, amenities, and seller type are absent. Source permission
+for broad redistribution is not explicitly granted. The snapshot is current for August 2026 but
+will drift as the market changes.

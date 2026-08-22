@@ -17,8 +17,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--rooms", type=int, required=True, help="Number of rooms")
     parser.add_argument("--level", type=int, required=True, help="Apartment floor")
     parser.add_argument("--max-levels", type=int, required=True, help="Building floor count")
-    parser.add_argument("--lat", type=float, required=True, help="Latitude")
-    parser.add_argument("--lng", type=float, required=True, help="Longitude")
+    parser.add_argument(
+        "--new-building",
+        action="store_true",
+        help="Mark the listing as a new-build apartment",
+    )
     parser.add_argument(
         "--model",
         type=Path,
@@ -34,12 +37,11 @@ def main() -> None:
     price, warnings = predict_price(
         artifact,
         district=args.district,
-        size=args.size,
+        size_m2=args.size,
         rooms=args.rooms,
         level=args.level,
         max_levels=args.max_levels,
-        lat=args.lat,
-        lng=args.lng,
+        is_new_building=int(args.new_building),
     )
     print(f"Estimated listing price: ${price:,.0f} USD")
     for warning in warnings:

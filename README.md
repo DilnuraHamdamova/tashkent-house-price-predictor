@@ -1,68 +1,91 @@
-# Tashkent House Price Predictor
+# Tashkent Apartment Listing Price Predictor
 
 [![CI](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/actions/workflows/ci.yml/badge.svg)](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/actions/workflows/ci.yml)
 [![Open demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/DilnuraHamdamova/tashkent-house-price-predictor/blob/main/demo.ipynb)
 
-**[View presentation](presentation/README.md)** · **[Download PowerPoint](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/raw/refs/heads/main/presentation/Tashkent_House_Price_Defense.pptx)** · **[Open PDF](presentation/Tashkent_House_Price_Defense.pdf)**
+**[View presentation](presentation/README.md)** · **[PowerPoint](presentation/Tashkent_House_Price_Defense.pptx)** · **[PDF](presentation/Tashkent_House_Price_Defense.pdf)**
 
-An end-to-end regression capstone that estimates the advertised price of a Tashkent apartment from its district, size, room/floor information, and coordinates. The repository includes data documentation, reproducible model comparison, protected-test evaluation, a saved inference pipeline, input validation, tests, and a clean Google Colab demo.
+**[Bugungi pitch uchun to‘liq o‘zbekcha qo‘llanma va exact English speech](docs/defense_day_guide_uz.md)**
+
+An end-to-end regression capstone that estimates the advertised USD asking price of a Tashkent
+apartment from current August 2026 listing attributes. The repository includes a reproducible
+privacy-minimized snapshot, feature-group-safe evaluation, a saved inference pipeline, validation,
+tests, a Colab demo, and defense evidence.
 
 **Selected track:** Individual Project Track
-
 **Student:** Dilnura Hamdamova
 
 ## Problem and scope
 
-Buyers, sellers, and real-estate analysts need a quick reference estimate in a market with limited price transparency. The ML task is supervised regression:
+Buyers, sellers, agents, and market analysts need a quick reference estimate when comparing
+current Tashkent apartment advertisements. This is supervised regression:
 
-- **Input:** district, size (m²), rooms, apartment level, building levels, latitude, longitude.
-- **Output:** estimated listing price in **USD**.
-- **Primary metric:** MAE, because its dollar error is easy to interpret.
+- **Input:** district, size (m²), rooms, apartment floor, building floors, new-build/resale.
+- **Output:** estimated **2026 advertised asking price in USD**.
+- **Primary metric:** MAE, because dollar error is directly understandable.
 - **Supporting metrics:** RMSE, R², and MAPE.
-- **Success criterion:** beat the median baseline test MAE by at least 30%, reach test R² ≥ 0.60, and test MAPE ≤ 25%.
-- **Non-goals:** official appraisal, sale-price guarantee, live-market forecast, exact-address valuation, or autonomous financial decision-making.
+- **Success criterion:** reduce baseline test MAE by at least 30%, reach test R² ≥ 0.60, and
+  test MAPE ≤ 25%.
+- **Non-goals:** completed sale-price verification, legal appraisal, price guarantee, lending,
+  taxation, or autonomous financial decision-making.
 
-## Data
+## Current 2026 data
 
-The committed `data/house_prices.csv` contains 7,421 Tashkent apartment listings scraped from uybor.uz in 2019. It comes from Kaggle's [Real estate prices in Tashkent, Uzbekistan](https://www.kaggle.com/datasets/anvarnarz/tashkent-real-estate-2019), published under **CC0: Public Domain**. Prices are USD asking prices, not UZS and not verified transaction prices.
+The committed `data/apartment_listings_2026.csv` is a privacy-minimized snapshot of public
+[HATA Tashkent sale listings](https://hata.uz/en/listings/sale/flats/tashkent), collected on
+22 August 2026. Listing dates range from 4–21 August 2026. The collector retains factual property
+fields and source URLs but excludes seller identity, contacts, descriptions, and images.
 
-The training loader removes 696 exact duplicates, leaving 6,725 rows. There are 12 districts and no missing values in required fields. Exact address is excluded to reduce memorization; district and coordinates retain location signal. See [data/README.md](data/README.md) and [reports/data_audit.md](reports/data_audit.md).
+The snapshot contains 4,867 unique complete-feature listings. Conservative range checks remove
+257 obvious category/currency/unit errors, then 396 exact feature + target duplicates are removed,
+leaving 4,214 modeling rows and 3,840 apartment-feature groups. Eleven districts are represented;
+Yangihayot is absent. See [data/README.md](data/README.md) and
+[reports/data_audit.md](reports/data_audit.md).
+
+The target is an **advertised asking price**, not a verified transaction price. HATA does not
+publish an open-data license; source rights remain with HATA and listing authors. Written
+redistribution permission is a recommended external confirmation before wider reuse.
 
 ## Method
 
-The split is fixed with `random_state=42`: 80% development data and a protected 20% test set, stratified by district. Model selection uses only five-fold district-stratified cross-validation on the development split. All encoders/scalers live inside scikit-learn pipelines, preventing preprocessing leakage. After final test evaluation, the selected pipeline is refitted on all de-duplicated rows for inference.
-
-### System architecture
+The holdout split is fixed with `random_state=42`. Identical apartment fingerprints—district,
+rooms, size, floor, building floors, and building type—are kept in one split. Approximately 80%
+of feature groups form the development set and 20% form the protected test set, stratified by
+district at group level. Model selection uses five-fold `StratifiedGroupKFold` only on development
+data. All encoding/scaling stays inside scikit-learn pipelines.
 
 ```text
-Raw CSV / raw apartment input
-          ↓
-Schema and range validation → exact-duplicate removal (training only)
-          ↓
-Floor-ratio feature + district one-hot encoding inside sklearn Pipeline
-          ↓
-Baseline / Ridge / Random Forest / Gradient Boosting comparison
-          ↓
-Training-only cross-validation → protected test evaluation
-          ↓
-Saved preprocessing + Random Forest pipeline → validated USD prediction + warnings
+Public 2026 catalog → privacy-minimized snapshot → schema/range validation
+       ↓
+exact feature+target deduplication → feature fingerprint groups
+       ↓
+group-safe development/test split → group-safe five-fold model comparison
+       ↓
+protected unseen test evaluation → saved Random Forest pipeline
+       ↓
+validated apartment input → 2026 asking-price estimate + range warnings
 ```
 
-| Experiment | CV MAE (USD) | CV RMSE (USD) | CV R² |
+### Training-only cross-validation
+
+| Experiment | CV MAE | CV RMSE | CV R² |
 |---|---:|---:|---:|
-| Median baseline | 25,220 | 47,276 | -0.081 |
-| Log Ridge | 15,580 | 47,449 | -0.248 |
-| **Random Forest (selected)** | **11,108** | **23,289** | **0.736** |
-| Gradient Boosting | 12,099 | 25,473 | 0.685 |
+| Median baseline | $55,604 | $123,587 | -0.068 |
+| Log Ridge | $38,301 | $105,755 | 0.219 |
+| **Random Forest (selected)** | **$31,298** | **$80,394** | **0.556** |
+| Gradient Boosting | $33,545 | $94,081 | 0.396 |
 
-### Protected test result
+### Protected unseen test result
 
-| Model | MAE (USD) | RMSE (USD) | R² | MAPE |
+| Model | MAE | RMSE | R² | MAPE |
 |---|---:|---:|---:|---:|
-| Median baseline | 24,217 | 47,235 | -0.062 | 38.56% |
-| **Random Forest** | **10,573** | **23,162** | **0.745** | **16.66%** |
+| Median baseline | $50,900 | $107,189 | -0.058 | 46.39% |
+| **Random Forest** | **$27,195** | **$58,887** | **0.681** | **24.58%** |
 
-The selected model reduces MAE by 56.3% versus the baseline and meets all stated success criteria. Large errors remain for rare luxury/outlier listings; the worst test miss is a $800,000 Mirobod listing predicted near $354,962. District slices with very few examples (especially Bektemir and Yangihayot) are not reliable. Full metrics are in [artifacts/metrics.json](artifacts/metrics.json) and analysis is in [reports/results.md](reports/results.md).
+Random Forest reduces MAE by **46.6%** versus baseline and meets all predefined thresholds. The
+largest protected-test miss is a $1,000,000 Shayhontohur new-build listing predicted near $234,461.
+Performance is much less reliable for high-end listings: Mirobod test MAE is about $52,143 and
+Shayhontohur test MAE about $64,541. Full evidence is in `artifacts/metrics.json` and `reports/`.
 
 ## Reproduce locally
 
@@ -77,15 +100,16 @@ python -m pip install -r requirements.txt
 python -m src.train
 ```
 
-Run a prediction:
+Run a resale-apartment prediction:
 
 ```bash
 python -m src.predict \
-  --district Chilonzor --size 70 --rooms 3 \
-  --level 3 --max-levels 5 --lat 41.3002 --lng 69.2108
+  --district Chilonzor --size 70 --rooms 3 --level 3 --max-levels 5
 ```
 
-The checked example returns approximately `$53,532 USD`; small differences can occur across supported dependency versions. Unknown districts or values outside the training range produce a warning.
+The checked example returns approximately **$97,098 USD**. Add `--new-building` for a new build;
+the checked equivalent returns approximately **$103,647 USD**. Values outside training ranges
+or unseen districts produce warnings.
 
 Run quality checks:
 
@@ -95,42 +119,49 @@ python -m pytest
 ruff check src tests scripts
 ```
 
+## Refresh the current snapshot
+
+The committed snapshot makes evaluation reproducible. A later refresh creates a different dataset
+and therefore requires retraining and re-reporting every metric:
+
+```bash
+python scripts/collect_current_listings.py apartment
+python -m src.train
+```
+
+The collector follows the public catalog rather than disallowed API routes, uses a delay, and
+checkpoints progress. Reconfirm source terms before each refresh.
+
 ## Colab demo
 
-Click the Colab badge above and choose **Runtime → Run all**. The notebook clones this repository when necessary, installs dependencies, loads the committed model, validates one raw example, and produces a prediction without hidden notebook state. `notebooks/01_data_audit.ipynb` and `notebooks/02_experiments.ipynb` document development; `demo.ipynb` is the focused final demonstration.
-
-## Repository structure
-
-```text
-├── data/                       # Dataset and dataset card
-├── notebooks/                  # EDA and experiment notebooks
-├── artifacts/                  # Saved pipeline and metrics
-├── reports/                    # Data audit, results, error analysis
-├── docs/                       # Evidence matrix, pitch, Q&A, action plan
-├── presentation/               # Complete defense PDF and editable PPTX
-├── scripts/                    # Reproducible presentation builder
-├── src/                        # Reusable load/train/predict code
-├── tests/                      # Validation and inference tests
-├── submission/                 # Project brief and LMS submission document
-├── demo.ipynb                  # Clean Colab inference demo
-├── requirements.txt
-└── README.md
-```
+Open the Colab badge and choose **Runtime → Run all**. The notebook clones the repository when
+needed, installs dependencies, loads the committed 2026 pipeline, predicts one resale and one
+new-build example, and demonstrates invalid-floor validation without hidden notebook state.
 
 ## Limitations and responsible use
 
-- Data represents 2019 advertisements, so the model is not calibrated to current market prices.
-- Asking price may differ from final sale price.
-- Sparse districts have unstable slice metrics; the model should not be used to compare or rank residents.
-- Important factors such as renovation quality, building age, legal status, and market date are absent.
-- Coordinates can create location bias, and the model may reproduce historical price inequalities.
-- The published dataset contains property attributes and approximate locations but no seller names, phone numbers, credentials, or other direct personal identifiers. The project does not add or retain user-submitted prediction inputs.
-- Predictions require human review and comparable listings. Do not use this educational model for lending, taxation, legal appraisal, or high-stakes financial decisions.
+- The model estimates August 2026 advertisements; it is not a permanently live forecast.
+- Asking price may differ materially from completed transaction price.
+- User-entered listings can be stale, inaccurate, duplicated, or miscategorized.
+- Same-feature grouping reduces leakage but cannot identify every relisted physical apartment.
+- Exact address, condition, renovation, construction year, legal status, and amenities are absent.
+- District slices vary sharply; negative R² in some districts means local reliability is weak.
+- Yangihayot has no retained modeling rows and is out of distribution.
+- Geographic price patterns may reproduce historical and current location inequality.
+- Predictions require human review and recent comparable listings. Do not use this educational
+  model for lending, taxation, legal appraisal, or high-stakes financial decisions.
 
 ## Author and assistance disclosure
 
-**Dilnura Hamdamova** — Individual Project Track. AI coding assistance was used for scaffolding, review, testing support, and documentation. The author remains responsible for verifying, understanding, and defending the submitted work.
+**Dilnura Hamdamova** — Individual Project Track. AI coding assistance was used for scaffolding,
+review, testing support, and documentation. The author remains responsible for verifying,
+understanding, and defending every submitted claim.
 
 ## Defense evidence
 
-The [evidence matrix](docs/evidence_matrix.md) maps every rubric criterion to an exact repository location. The [five-minute pitch](docs/defense_pitch_outline.md), [question bank](docs/defense_question_bank.md), [action plan](docs/action_plan.md), [clean-run record](reports/clean_run_check.md), and slides under `presentation/` form the defense preparation pack.
+The [official evidence matrix](docs/capstone_evidence_matrix.md),
+[five-minute pitch](docs/defense_pitch_outline.md),
+[complete defense-day guide](docs/defense_day_guide_uz.md),
+[question bank](docs/defense_question_bank.md),
+[final action plan](docs/final_action_plan.md), and
+[clean-run record](reports/clean_run_check.md) form the defense preparation pack.

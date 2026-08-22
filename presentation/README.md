@@ -1,4 +1,4 @@
-# Defense presentation
+# 2026 Tashkent Apartment Predictor defense presentation
 
 ## Open or download
 
@@ -6,7 +6,10 @@
 - **[Download the complete PDF](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/raw/refs/heads/main/presentation/Tashkent_House_Price_Defense.pdf)**
 - [Download the editable PowerPoint](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/raw/refs/heads/main/presentation/Tashkent_House_Price_Defense.pptx)
 
-The PDF contains all 10 slides in one file. Slides 1–7 follow the five-minute route in [`docs/defense_pitch_outline.md`](../docs/defense_pitch_outline.md). Slides 8–10 are appendix evidence/architecture/Q&A slides.
+The PDF contains all 10 slides in one file. It presents the current August 2026 apartment-only
+scope. Slides 1–7 follow the five-minute route in
+[`docs/defense_pitch_outline.md`](../docs/defense_pitch_outline.md). Slides 8–10 are appendix
+evidence/architecture/Q&A slides.
 
 ## Regenerate
 

@@ -1,322 +1,305 @@
 {
   "model_name": "random_forest",
-  "trained_at_utc": "2026-08-17T06:24:44.984850+00:00",
+  "trained_at_utc": "2026-08-22T00:17:27.891530+00:00",
   "random_state": 42,
-  "row_count": 6725,
-  "train_row_count": 5380,
-  "test_row_count": 1345,
+  "row_count": 4214,
+  "train_row_count": 3379,
+  "test_row_count": 835,
+  "train_group_count": 3072,
+  "test_group_count": 768,
+  "holdout_group_overlap": 0,
+  "cv_group_overlap_max": 0,
   "feature_columns": [
     "district",
     "rooms",
-    "size",
+    "size_m2",
     "level",
     "max_levels",
-    "lat",
-    "lng",
+    "is_new_building",
     "floor_ratio"
   ],
-  "target": "price_usd",
-  "selection_rule": "lowest 5-fold stratified CV MAE on the 80% training split",
+  "target": "listing_price_usd",
+  "selection_rule": "lowest 5-fold district-stratified, feature-group-safe CV MAE on the 80% development groups",
+  "split_rule": "identical apartment feature fingerprints stay in one split for holdout and CV",
   "experiments": {
     "median_baseline": {
-      "cv_mae_mean_usd": 25220.03773234201,
-      "cv_mae_std_usd": 1029.7985216485818,
-      "cv_rmse_mean_usd": 47275.70550051646,
-      "cv_r2_mean": -0.08115692595483597,
-      "fit_time_mean_seconds": 0.04494009017944336
+      "cv_mae_mean_usd": 55604.27738286215,
+      "cv_mae_std_usd": 6427.752880977065,
+      "cv_rmse_mean_usd": 123587.31681811903,
+      "cv_r2_mean": -0.06796335639938786,
+      "fit_time_mean_seconds": 0.04164528846740723
     },
     "log_ridge": {
-      "cv_mae_mean_usd": 15579.880162721518,
-      "cv_mae_std_usd": 1229.6278590150228,
-      "cv_rmse_mean_usd": 47449.192002674376,
-      "cv_r2_mean": -0.24771217293477782,
-      "fit_time_mean_seconds": 0.051447486877441405
+      "cv_mae_mean_usd": 38301.2107532544,
+      "cv_mae_std_usd": 6704.588068080405,
+      "cv_rmse_mean_usd": 105754.97031019119,
+      "cv_r2_mean": 0.218688071657502,
+      "fit_time_mean_seconds": 0.06301159858703613
     },
     "random_forest": {
-      "cv_mae_mean_usd": 11108.245402337878,
-      "cv_mae_std_usd": 745.3082261140312,
-      "cv_rmse_mean_usd": 23288.952770797794,
-      "cv_r2_mean": 0.7355319584886305,
-      "fit_time_mean_seconds": 2.555273103713989
+      "cv_mae_mean_usd": 31298.12179612737,
+      "cv_mae_std_usd": 3251.5972131948197,
+      "cv_rmse_mean_usd": 80393.87028218924,
+      "cv_r2_mean": 0.556026373277011,
+      "fit_time_mean_seconds": 1.518087100982666
     },
     "gradient_boosting": {
-      "cv_mae_mean_usd": 12098.785636762144,
-      "cv_mae_std_usd": 659.7074386006639,
-      "cv_rmse_mean_usd": 25473.305921597766,
-      "cv_r2_mean": 0.68524157106496,
-      "fit_time_mean_seconds": 3.6255950927734375
+      "cv_mae_mean_usd": 33545.099201330595,
+      "cv_mae_std_usd": 5184.62530079453,
+      "cv_rmse_mean_usd": 94081.19107802707,
+      "cv_r2_mean": 0.39589204600513117,
+      "fit_time_mean_seconds": 2.358242225646973
     }
   },
   "protected_test_comparison": {
     "median_baseline": {
-      "mae_usd": 24216.953159851302,
-      "rmse_usd": 47234.700151273,
-      "r2": -0.06211352607406062,
-      "mape_percent": 38.55533891821271
+      "mae_usd": 50899.95089820359,
+      "rmse_usd": 107188.99693911299,
+      "r2": -0.05778529514214248,
+      "mape_percent": 46.389847076904154
     },
     "random_forest": {
-      "mae_usd": 10572.664061046176,
-      "rmse_usd": 23162.180873769885,
-      "r2": 0.7446078692343355,
-      "mape_percent": 16.66083205447284
+      "mae_usd": 27195.253059237242,
+      "rmse_usd": 58886.805681101614,
+      "r2": 0.6807483835604615,
+      "mape_percent": 24.58405863457492
     }
   },
   "district_test_metrics": {
     "Bektemir": {
-      "rows": 2,
-      "mae_usd": 20799.19340476191,
-      "rmse_usd": 20857.854267419403,
-      "r2": -11.084724573358493,
-      "mape_percent": 62.30297242006804
+      "rows": 68,
+      "mae_usd": 12997.736103456158,
+      "rmse_usd": 37399.38840327407,
+      "r2": -1.7768966322701152,
+      "mape_percent": 22.544066425285536
     },
     "Chilonzor": {
-      "rows": 295,
-      "mae_usd": 5844.176479661434,
-      "rmse_usd": 10649.536511852675,
-      "r2": 0.7980693117931494,
-      "mape_percent": 11.678753098410517
+      "rows": 68,
+      "mae_usd": 16940.416033762875,
+      "rmse_usd": 39681.801183015996,
+      "r2": -0.6594661271071054,
+      "mape_percent": 25.722176338402676
     },
     "Mirobod": {
-      "rows": 139,
-      "mae_usd": 23531.101815863753,
-      "rmse_usd": 51264.24587159197,
-      "r2": 0.6680631118947291,
-      "mape_percent": 25.92237527883423
+      "rows": 31,
+      "mae_usd": 52143.22062132848,
+      "rmse_usd": 87692.51190997186,
+      "r2": 0.5064434055265735,
+      "mape_percent": 36.039989266893144
     },
     "Mirzo Ulugbek": {
-      "rows": 240,
-      "mae_usd": 9522.348530488493,
-      "rmse_usd": 19569.568775644322,
-      "r2": 0.7588560069250081,
-      "mape_percent": 15.783624487013936
+      "rows": 42,
+      "mae_usd": 21811.406654202456,
+      "rmse_usd": 33180.32642861087,
+      "r2": 0.548709846958505,
+      "mape_percent": 19.594639011949948
     },
-    "Olmzor": {
-      "rows": 50,
-      "mae_usd": 12240.216897564216,
-      "rmse_usd": 26004.74391367266,
-      "r2": -0.5940826130347745,
-      "mape_percent": 22.198168383753572
+    "Olmazor": {
+      "rows": 86,
+      "mae_usd": 18286.51669983092,
+      "rmse_usd": 27923.82932681653,
+      "r2": 0.48966498649417833,
+      "mape_percent": 20.96683747825758
     },
     "Sergeli": {
-      "rows": 29,
-      "mae_usd": 12159.0409794447,
-      "rmse_usd": 16923.677764938628,
-      "r2": 0.5356695263671317,
-      "mape_percent": 26.315190532242006
+      "rows": 83,
+      "mae_usd": 11365.434940105659,
+      "rmse_usd": 19475.78459116598,
+      "r2": 0.25441503871033433,
+      "mape_percent": 18.789512632348558
     },
     "Shayhontohur": {
-      "rows": 68,
-      "mae_usd": 12251.376363335032,
-      "rmse_usd": 18791.573079018057,
-      "r2": 0.8545665883302155,
-      "mape_percent": 16.860785346690864
+      "rows": 112,
+      "mae_usd": 64541.1661685761,
+      "rmse_usd": 124601.35080482565,
+      "r2": 0.6682556274925677,
+      "mape_percent": 33.73557018817812
     },
     "Uchtepa": {
-      "rows": 159,
-      "mae_usd": 5951.158872696905,
-      "rmse_usd": 9031.490429262336,
-      "r2": 0.6394693733664312,
-      "mape_percent": 12.35028373761948
+      "rows": 77,
+      "mae_usd": 13421.9616376227,
+      "rmse_usd": 19750.83174877592,
+      "r2": 0.5634821611433253,
+      "mape_percent": 22.440540662195662
     },
     "Yakkasaroy": {
-      "rows": 110,
-      "mae_usd": 13830.887631167921,
-      "rmse_usd": 22927.62890843264,
-      "r2": 0.7644245602459038,
-      "mape_percent": 19.76118852148869
-    },
-    "Yangihayot": {
-      "rows": 3,
-      "mae_usd": 6073.10784761905,
-      "rmse_usd": 8276.265545639308,
-      "r2": -0.3653801604372682,
-      "mape_percent": 20.98976653960625
+      "rows": 78,
+      "mae_usd": 37397.18290918735,
+      "rmse_usd": 60493.85366261036,
+      "r2": 0.46331218639150207,
+      "mape_percent": 25.776184996427844
     },
     "Yashnobod": {
-      "rows": 88,
-      "mae_usd": 12535.322431737206,
-      "rmse_usd": 24469.13826186564,
-      "r2": 0.7553419458883093,
-      "mape_percent": 19.514039758637658
+      "rows": 59,
+      "mae_usd": 14088.999791673863,
+      "rmse_usd": 20296.439819411917,
+      "r2": 0.5504156454340733,
+      "mape_percent": 18.475109197158986
     },
     "Yunusobod": {
-      "rows": 162,
-      "mae_usd": 9331.72648372382,
-      "rmse_usd": 15756.908038904312,
-      "r2": 0.7314435739900256,
-      "mape_percent": 15.496839293404705
+      "rows": 131,
+      "mae_usd": 27583.348034942333,
+      "rmse_usd": 42037.459520047654,
+      "r2": 0.6589973726155164,
+      "mape_percent": 25.46422145137271
     }
   },
   "largest_test_errors": [
     {
-      "source_index": 1614,
-      "district": "Mirobod",
-      "rooms": 10,
-      "size": 456.0,
-      "level": 3,
-      "max_levels": 7,
-      "lat": 41.296644,
-      "lng": 69.275878,
-      "floor_ratio": 0.42857142857142855,
-      "actual_usd": 800000.0,
-      "predicted_usd": 354961.5993650793,
-      "absolute_error_usd": 445038.4006349207
-    },
-    {
-      "source_index": 5983,
-      "district": "Mirobod",
-      "rooms": 2,
-      "size": 280.0,
-      "level": 9,
-      "max_levels": 9,
-      "lat": 41.2758912,
-      "lng": 69.2937133,
-      "floor_ratio": 1.0,
-      "actual_usd": 48000.0,
-      "predicted_usd": 222023.61363809524,
-      "absolute_error_usd": 174023.61363809524
-    },
-    {
-      "source_index": 5110,
-      "district": "Mirzo Ulugbek",
-      "rooms": 4,
-      "size": 190.0,
-      "level": 3,
-      "max_levels": 8,
-      "lat": 41.3239567,
-      "lng": 69.2232092,
-      "floor_ratio": 0.375,
-      "actual_usd": 365000.0,
-      "predicted_usd": 193544.92773015867,
-      "absolute_error_usd": 171455.07226984133
-    },
-    {
-      "source_index": 2687,
-      "district": "Mirobod",
+      "source_index": 955,
+      "district": "Shayhontohur",
       "rooms": 3,
-      "size": 110.0,
-      "level": 4,
-      "max_levels": 6,
-      "lat": 41.295316,
-      "lng": 69.275364,
-      "floor_ratio": 0.6666666666666666,
-      "actual_usd": 295000.0,
-      "predicted_usd": 141853.50497056276,
-      "absolute_error_usd": 153146.49502943724
-    },
-    {
-      "source_index": 2430,
-      "district": "Mirobod",
-      "rooms": 4,
-      "size": 152.0,
+      "size_m2": 160.0,
       "level": 2,
-      "max_levels": 8,
-      "lat": 41.2968147,
-      "lng": 69.268476,
-      "floor_ratio": 0.25,
-      "actual_usd": 380000.0,
-      "predicted_usd": 228085.1312634921,
-      "absolute_error_usd": 151914.8687365079
+      "max_levels": 9,
+      "is_new_building": 1,
+      "floor_ratio": 0.2222222222222222,
+      "actual_usd": 1000000.0,
+      "predicted_usd": 234461.1896871574,
+      "absolute_error_usd": 765538.8103128426
     },
     {
-      "source_index": 568,
-      "district": "Mirobod",
-      "rooms": 4,
-      "size": 164.0,
+      "source_index": 965,
+      "district": "Shayhontohur",
+      "rooms": 6,
+      "size_m2": 210.0,
       "level": 3,
       "max_levels": 7,
-      "lat": 41.2758912,
-      "lng": 69.2937133,
+      "is_new_building": 1,
       "floor_ratio": 0.42857142857142855,
-      "actual_usd": 120000.0,
-      "predicted_usd": 248107.56989841265,
-      "absolute_error_usd": 128107.56989841265
+      "actual_usd": 1200000.0,
+      "predicted_usd": 681974.6247952381,
+      "absolute_error_usd": 518025.37520476186
     },
     {
-      "source_index": 1808,
-      "district": "Mirzo Ulugbek",
-      "rooms": 4,
-      "size": 138.0,
-      "level": 5,
-      "max_levels": 9,
-      "lat": 41.325724,
-      "lng": 69.2942285,
-      "floor_ratio": 0.5555555555555556,
-      "actual_usd": 295000.0,
-      "predicted_usd": 175681.29081904763,
-      "absolute_error_usd": 119318.70918095237
+      "source_index": 783,
+      "district": "Shayhontohur",
+      "rooms": 3,
+      "size_m2": 215.0,
+      "level": 2,
+      "max_levels": 7,
+      "is_new_building": 1,
+      "floor_ratio": 0.2857142857142857,
+      "actual_usd": 225000.0,
+      "predicted_usd": 588959.3532809525,
+      "absolute_error_usd": 363959.35328095255
     },
     {
-      "source_index": 1612,
-      "district": "Yashnobod",
-      "rooms": 4,
-      "size": 456.0,
-      "level": 8,
-      "max_levels": 8,
-      "lat": 41.3052221,
-      "lng": 69.2898134,
-      "floor_ratio": 1.0,
-      "actual_usd": 230000.0,
-      "predicted_usd": 347586.9652380953,
-      "absolute_error_usd": 117586.96523809532
-    },
-    {
-      "source_index": 2654,
+      "source_index": 658,
       "district": "Yakkasaroy",
       "rooms": 4,
-      "size": 200.0,
-      "level": 1,
-      "max_levels": 8,
-      "lat": 41.2911414,
-      "lng": 69.2601933,
-      "floor_ratio": 0.125,
-      "actual_usd": 128000.0,
-      "predicted_usd": 245569.81760952383,
-      "absolute_error_usd": 117569.81760952383
+      "size_m2": 220.0,
+      "level": 11,
+      "max_levels": 12,
+      "is_new_building": 1,
+      "floor_ratio": 0.9166666666666666,
+      "actual_usd": 135000.0,
+      "predicted_usd": 482163.398952381,
+      "absolute_error_usd": 347163.398952381
     },
     {
-      "source_index": 5508,
-      "district": "Olmzor",
-      "rooms": 6,
-      "size": 200.0,
-      "level": 3,
-      "max_levels": 4,
-      "lat": 41.3595375,
-      "lng": 69.1926482,
-      "floor_ratio": 0.75,
-      "actual_usd": 65000.0,
-      "predicted_usd": 174129.13676190478,
-      "absolute_error_usd": 109129.13676190478
+      "source_index": 51,
+      "district": "Shayhontohur",
+      "rooms": 7,
+      "size_m2": 266.0,
+      "level": 1,
+      "max_levels": 7,
+      "is_new_building": 1,
+      "floor_ratio": 0.14285714285714285,
+      "actual_usd": 159900.0,
+      "predicted_usd": 479227.3374682542,
+      "absolute_error_usd": 319327.3374682542
+    },
+    {
+      "source_index": 1338,
+      "district": "Mirobod",
+      "rooms": 4,
+      "size_m2": 180.0,
+      "level": 2,
+      "max_levels": 5,
+      "is_new_building": 0,
+      "floor_ratio": 0.4,
+      "actual_usd": 600000.0,
+      "predicted_usd": 289968.0380857144,
+      "absolute_error_usd": 310031.9619142856
+    },
+    {
+      "source_index": 34,
+      "district": "Shayhontohur",
+      "rooms": 7,
+      "size_m2": 266.0,
+      "level": 1,
+      "max_levels": 8,
+      "is_new_building": 1,
+      "floor_ratio": 0.125,
+      "actual_usd": 159900.0,
+      "predicted_usd": 467973.95254127006,
+      "absolute_error_usd": 308073.95254127006
+    },
+    {
+      "source_index": 952,
+      "district": "Shayhontohur",
+      "rooms": 3,
+      "size_m2": 114.0,
+      "level": 7,
+      "max_levels": 7,
+      "is_new_building": 1,
+      "floor_ratio": 1.0,
+      "actual_usd": 800000.0,
+      "predicted_usd": 495799.193336874,
+      "absolute_error_usd": 304200.806663126
+    },
+    {
+      "source_index": 2982,
+      "district": "Chilonzor",
+      "rooms": 8,
+      "size_m2": 550.0,
+      "level": 1,
+      "max_levels": 2,
+      "is_new_building": 0,
+      "floor_ratio": 0.5,
+      "actual_usd": 76000.0,
+      "predicted_usd": 371248.8977333335,
+      "absolute_error_usd": 295248.8977333335
+    },
+    {
+      "source_index": 3163,
+      "district": "Mirobod",
+      "rooms": 4,
+      "size_m2": 123.0,
+      "level": 5,
+      "max_levels": 10,
+      "is_new_building": 1,
+      "floor_ratio": 0.5,
+      "actual_usd": 480000.0,
+      "predicted_usd": 186826.73214689756,
+      "absolute_error_usd": 293173.2678531024
     }
   ],
   "final_fit": "selected pipeline refitted on all de-duplicated rows after test evaluation",
   "training_ranges": {
     "rooms": {
       "min": 1.0,
-      "max": 10.0
+      "max": 12.0
     },
-    "size": {
-      "min": 14.0,
-      "max": 456.0
+    "size_m2": {
+      "min": 15.0,
+      "max": 902.0
     },
     "level": {
       "min": 1.0,
-      "max": 19.0
+      "max": 43.0
     },
     "max_levels": {
       "min": 1.0,
-      "max": 25.0
+      "max": 49.0
     },
-    "lat": {
-      "min": 41.186375,
-      "max": 41.4245218
-    },
-    "lng": {
-      "min": 69.1489148,
-      "max": 69.5886868
+    "is_new_building": {
+      "min": 0.0,
+      "max": 1.0
     },
     "floor_ratio": {
-      "min": 0.08333333333333333,
+      "min": 0.05,
       "max": 1.0
     }
   },
@@ -325,21 +308,48 @@
     "Chilonzor",
     "Mirobod",
     "Mirzo Ulugbek",
-    "Olmzor",
+    "Olmazor",
     "Sergeli",
     "Shayhontohur",
     "Uchtepa",
     "Yakkasaroy",
-    "Yangihayot",
     "Yashnobod",
     "Yunusobod"
   ],
   "data_audit": {
-    "source_rows": 7421,
-    "duplicate_rows_removed": 696,
-    "training_rows": 6725,
-    "missing_values": 0,
-    "district_count": 12,
-    "target_currency": "USD"
+    "source_rows": 4867,
+    "missing_required_rows": 0,
+    "invalid_rows_removed": 257,
+    "duplicate_rows_removed": 396,
+    "modeling_rows": 4214,
+    "property_feature_groups": 3840,
+    "district_count": 11,
+    "target_name": "listing_price_usd",
+    "target_currency": "USD",
+    "target_meaning": "advertised asking price, not completed sale price",
+    "listing_date_min": "2026-08-04",
+    "listing_date_max": "2026-08-21",
+    "valid_ranges": {
+      "rooms": [
+        1,
+        20
+      ],
+      "size_m2": [
+        15,
+        1000
+      ],
+      "level": [
+        1,
+        50
+      ],
+      "max_levels": [
+        1,
+        50
+      ],
+      "listing_price_usd": [
+        10000,
+        5000000
+      ]
+    }
   }
 }

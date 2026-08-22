@@ -169,7 +169,7 @@ def build() -> Path:
     slide = presentation.slides.add_slide(blank)
     add_header(slide, 1, "INDIVIDUAL PROJECT")
     add_text(slide, "TASHKENT", 0.55, 1.35, 7.2, 0.75, size=40, bold=True)
-    add_text(slide, "HOUSE PRICE", 0.55, 2.10, 7.2, 0.82, size=43, bold=True, color=BLUE)
+    add_text(slide, "APARTMENT PRICE", 0.55, 2.10, 7.2, 0.82, size=39, bold=True, color=BLUE)
     add_text(slide, "PREDICTOR", 0.55, 2.92, 7.2, 0.78, size=41, bold=True)
     add_text(
         slide,
@@ -185,7 +185,7 @@ def build() -> Path:
     add_text(slide, "PROJECT IN ONE LINE", 8.48, 1.76, 3.8, 0.35, size=14, color=BLUE, bold=True)
     add_text(
         slide,
-        "Estimate a historical 2019 Tashkent apartment asking price from observable listing attributes.",
+        "Estimate a current August 2026 Tashkent apartment asking price from observable listing attributes.",
         8.48,
         2.28,
         3.67,
@@ -204,10 +204,10 @@ def build() -> Path:
         color=RED,
         bold=True,
     )
-    add_metric(slide, 0.65, 5.35, "DE-DUPLICATED ROWS", "6,725")
+    add_metric(slide, 0.65, 5.35, "MODELING ROWS", "4,214")
     add_metric(slide, 3.25, 5.35, "SELECTED MODEL", "RF")
-    add_metric(slide, 5.85, 5.35, "TEST R²", "0.745", color=GREEN)
-    add_metric(slide, 8.45, 5.35, "TEST MAE", "$10,573", color=GREEN)
+    add_metric(slide, 5.85, 5.35, "TEST R²", "0.681", color=GREEN)
+    add_metric(slide, 8.45, 5.35, "TEST MAE", "$27,195", color=GREEN)
 
     # Slide 2 — user and ML task
     slide = presentation.slides.add_slide(blank)
@@ -224,7 +224,7 @@ def build() -> Path:
         3.85,
         2.72,
         "USER",
-        "Buyers, sellers, agents, and analysts who need a consistent historical reference estimate.",
+        "Buyers, sellers, agents, and analysts who need a consistent August 2026 reference estimate.",
     )
     add_card(
         slide,
@@ -233,7 +233,7 @@ def build() -> Path:
         3.85,
         2.72,
         "SUPERVISED REGRESSION",
-        "Inputs: district, size, rooms, apartment level, building levels, latitude, longitude.\n\nTarget: listing price.",
+        "Inputs: district, size, rooms, apartment level, building levels, new-build/resale.\n\nTarget: asking price.",
         accent=CYAN,
     )
     add_card(
@@ -243,7 +243,7 @@ def build() -> Path:
         3.85,
         2.72,
         "OUTPUT + BOUNDARY",
-        "One estimated 2019 asking price in USD, plus warnings.\n\nNot a current quote, sale guarantee, or legal appraisal.",
+        "One estimated August 2026 asking price in USD, plus warnings.\n\nNot a completed sale price, guarantee, or legal appraisal.",
         accent=GREEN,
     )
     add_box(slide, 1.65, 5.55, 10.0, 0.85, fill=LIGHT, line=BLUE)
@@ -265,15 +265,15 @@ def build() -> Path:
     add_header(slide, 3, "DATA + APPROACH")
     add_title(
         slide,
-        "FROM 7,421 LISTINGS TO A LEAKAGE-SAFE TEST",
-        "CC0 uybor.uz advertisements collected in Tashkent in 2019.",
+        "FROM 4,867 LISTINGS TO A GROUP-SAFE TEST",
+        "Privacy-minimized public HATA snapshot collected 22 August 2026.",
     )
     steps = [
-        ("SOURCE", "7,421 rows\n9 columns"),
-        ("CLEAN", "696 exact\nduplicates removed"),
-        ("SPLIT", "80% develop\n20% protected test"),
-        ("SELECT", "5-fold CV\nstratified by district"),
-        ("EVALUATE", "1,345 unseen\ntest rows"),
+        ("SOURCE", "4,867 parsed\n11 districts"),
+        ("CLEAN", "257 invalid + 396\nduplicates removed"),
+        ("SPLIT", "3,840 groups\n80% / 20%"),
+        ("SELECT", "5-fold CV\ngroup-safe"),
+        ("EVALUATE", "835 unseen rows\n768 groups"),
     ]
     for index, (heading, body) in enumerate(steps):
         x = 0.52 + index * 2.55
@@ -295,7 +295,7 @@ def build() -> Path:
     add_text(slide, "Leakage controls", 1.05, 5.32, 1.75, 0.32, size=16, color=BLUE, bold=True)
     add_text(
         slide,
-        "duplicate removal before split  •  no target-derived features  •  encoding/scaling inside each sklearn pipeline  •  test not used for selection",
+        "feature+target deduplication  •  identical fingerprints grouped  •  no price/m² leakage  •  preprocessing inside CV  •  test not used for selection",
         2.75,
         5.26,
         9.35,
@@ -321,10 +321,10 @@ def build() -> Path:
         table.columns[i].width = Inches(width)
     values = [
         ["MODEL", "CV MAE", "CV RMSE", "CV R²"],
-        ["Median baseline", "$25,220", "$47,276", "-0.081"],
-        ["Log Ridge", "$15,580", "$47,449", "-0.248"],
-        ["Random Forest", "$11,108", "$23,289", "0.736"],
-        ["Gradient Boosting", "$12,099", "$25,473", "0.685"],
+        ["Median baseline", "$55,604", "$123,587", "-0.068"],
+        ["Log Ridge", "$38,301", "$105,755", "0.219"],
+        ["Random Forest", "$31,298", "$80,394", "0.556"],
+        ["Gradient Boosting", "$33,545", "$94,081", "0.396"],
     ]
     for row in range(rows):
         for col in range(cols):
@@ -363,14 +363,14 @@ def build() -> Path:
         "UNSEEN-TEST RESULT — WITH THE FAILURE VISIBLE",
         "The baseline comparison and error case matter more than a polished success claim.",
     )
-    add_metric(slide, 0.65, 2.35, "MAE", "$10,573", color=GREEN)
-    add_metric(slide, 3.15, 2.35, "RMSE", "$23,162", color=GREEN)
-    add_metric(slide, 5.65, 2.35, "R²", "0.745", color=GREEN)
-    add_metric(slide, 8.15, 2.35, "MAPE", "16.66%", color=GREEN)
+    add_metric(slide, 0.65, 2.35, "MAE", "$27,195", color=GREEN)
+    add_metric(slide, 3.15, 2.35, "RMSE", "$58,887", color=GREEN)
+    add_metric(slide, 5.65, 2.35, "R²", "0.681", color=GREEN)
+    add_metric(slide, 8.15, 2.35, "MAPE", "24.58%", color=GREEN)
     add_box(slide, 10.65, 2.35, 2.05, 1.18, fill=LIGHT, line=BLUE)
     add_text(
         slide,
-        "−56.3%",
+        "−46.6%",
         10.78,
         2.53,
         1.78,
@@ -390,7 +390,7 @@ def build() -> Path:
         7.05,
         2.02,
         "LARGEST ERROR",
-        "Mirobod • 456 m² • 10 rooms\nActual: $800,000   Predicted: $354,962\nAbsolute error: $445,038",
+        "Shayhontohur • 160 m² • 3 rooms • new build\nActual: $1,000,000   Predicted: $234,461\nAbsolute error: $765,539",
         accent=RED,
         body_size=18,
     )
@@ -401,7 +401,7 @@ def build() -> Path:
         4.65,
         2.02,
         "WHAT IT TEACHES",
-        "Luxury premiums and condition are not fully observed. Bektemir and Yangihayot are too sparse for reliable slice claims.",
+        "Luxury premiums and condition are not observed. Mirobod and Shayhontohur MAE is high; some district slice R² values are negative.",
         accent=YELLOW,
         body_size=16,
     )
@@ -416,7 +416,7 @@ def build() -> Path:
     )
     add_box(slide, 0.65, 2.22, 5.15, 3.75, fill=LIGHT, line=BLUE)
     add_text(slide, "RAW INPUT", 0.98, 2.52, 1.55, 0.32, size=16, color=BLUE, bold=True)
-    input_text = "District     Chilonzor\nSize         70 m²\nRooms        3\nLevel        3 / 5\nCoordinates  41.3002, 69.2108"
+    input_text = "District      Chilonzor\nSize          70 m²\nRooms         3\nLevel         3 / 5\nBuilding type Resale"
     add_text(slide, input_text, 1.00, 3.00, 4.20, 2.20, size=20)
     add_text(
         slide, "→", 5.95, 3.55, 0.70, 0.52, size=38, color=BLUE, bold=True, align=PP_ALIGN.CENTER
@@ -424,7 +424,7 @@ def build() -> Path:
     add_box(slide, 6.75, 2.22, 5.90, 1.72, fill=WHITE, line=GREEN)
     add_text(
         slide,
-        "ESTIMATED 2019 ASKING PRICE",
+        "ESTIMATED AUGUST 2026 ASKING PRICE",
         7.05,
         2.55,
         5.25,
@@ -436,7 +436,7 @@ def build() -> Path:
     )
     add_text(
         slide,
-        "$53,532 USD",
+        "$97,098 USD",
         7.05,
         2.95,
         5.25,
@@ -479,7 +479,7 @@ def build() -> Path:
         3.85,
         2.70,
         "LIMITATIONS",
-        "2019 asking prices\nNo condition / building age / legal status\nSparse districts\nLocation bias and market drift",
+        "Dated asking-price snapshot\nNo condition / exact building / legal status\nUnequal district reliability\nSource noise and market drift",
         accent=RED,
         body_size=17,
     )
@@ -490,7 +490,7 @@ def build() -> Path:
         3.85,
         2.70,
         "SAFE USE",
-        "Historical reference only\nCompare with recent listings\nRequire human review\nNo lending, tax, or legal appraisal",
+        "August 2026 reference only\nCompare with recent listings\nRequire human review\nNo lending, tax, or legal appraisal",
         accent=YELLOW,
         body_size=17,
     )
@@ -501,7 +501,7 @@ def build() -> Path:
         3.85,
         2.70,
         "NEXT IMPROVEMENT",
-        "Collect current transaction data with date, condition, building year, renovation, and legal status; then use a time-aware holdout.",
+        "Collect verified transactions with exact neighborhood, condition, building year, renovation, and legal status; then use a later time holdout.",
         accent=GREEN,
         body_size=17,
     )
@@ -525,7 +525,7 @@ def build() -> Path:
     add_title(
         slide,
         "OFFICIAL CRITERIA → EXACT REPOSITORY PROOF",
-        "Open docs/evidence_matrix.md for the complete claim → location → why-proof mapping.",
+        "Open docs/capstone_evidence_matrix.md for the complete claim → location → why-proof mapping.",
     )
     evidence = [
         ("1  Problem", "README + Project Brief"),
@@ -549,7 +549,7 @@ def build() -> Path:
             body,
             heading_size=15,
             body_size=13,
-            accent=GREEN if index not in (0, 7) else YELLOW,
+            accent=GREEN if index not in (0, 1, 5, 7) else YELLOW,
         )
     add_text(
         slide,
@@ -573,7 +573,7 @@ def build() -> Path:
         "Preprocessing is serialized with the estimator, preventing notebook-only inference drift.",
     )
     architecture = [
-        ("RAW INPUT", "district • rooms • size • level • max_levels • lat • lng"),
+        ("RAW INPUT", "district • rooms • size • level • max_levels • new-build/resale"),
         ("VALIDATE", "required fields • positive values • level ≤ max_levels"),
         ("FEATURE", "floor_ratio = level / max_levels"),
         ("PREPROCESS", "OneHotEncoder district • numeric passthrough / scaling"),
@@ -622,7 +622,7 @@ def build() -> Path:
         3.72,
         2.30,
         "WHY RANDOM FOREST?",
-        "Lowest CV MAE ($11,108).\nOpen reports/model_comparison.csv.\nTrade-off: size and interpretability.",
+        "Lowest group-safe CV MAE ($31,298).\nOpen reports/model_comparison.csv.\nTrade-off: size and interpretability.",
         accent=BLUE,
         body_size=15,
     )
@@ -633,7 +633,7 @@ def build() -> Path:
         3.72,
         2.30,
         "IS IT CURRENT?",
-        "No — 2019 asking-price estimate.\nOpen README limitations.\nNext: current transaction data + time split.",
+        "Yes — dated Aug 2026 asking-price snapshot.\nOpen data/README.md.\nNot a permanently live or completed-sale model.",
         accent=RED,
         body_size=15,
     )
@@ -644,7 +644,7 @@ def build() -> Path:
         3.72,
         2.30,
         "BIGGEST FAILURE?",
-        "$800k Mirobod actual vs ~$355k predicted.\nOpen largest_errors.csv.\nMissing luxury/condition signal.",
+        "$1m Shayhontohur actual vs ~$234k predicted.\nOpen largest_errors.csv.\nMissing luxury/condition signal.",
         accent=YELLOW,
         body_size=15,
     )

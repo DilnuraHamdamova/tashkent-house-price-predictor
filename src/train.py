@@ -6,6 +6,8 @@ import argparse
 import json
 from pathlib import Path
 
+import pandas as pd
+
 from .data import load_dataset
 from .model import save_artifact, train_best_model
 
@@ -17,7 +19,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--data",
         type=Path,
-        default=PROJECT_ROOT / "data" / "house_prices.csv",
+        default=PROJECT_ROOT / "data" / "apartment_listings_2026.csv",
         help="CSV dataset path",
     )
     parser.add_argument(
@@ -43,6 +45,20 @@ def main() -> None:
     output = save_artifact(model, metadata, args.output)
     args.metrics_output.parent.mkdir(parents=True, exist_ok=True)
     args.metrics_output.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+    reports_dir = PROJECT_ROOT / "reports"
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame.from_dict(metadata["experiments"], orient="index").rename_axis(
+        "model"
+    ).reset_index().to_csv(reports_dir / "model_comparison.csv", index=False)
+    pd.DataFrame.from_dict(metadata["protected_test_comparison"], orient="index").rename_axis(
+        "model"
+    ).reset_index().to_csv(reports_dir / "protected_test_metrics.csv", index=False)
+    pd.DataFrame(metadata["largest_test_errors"]).to_csv(
+        reports_dir / "largest_errors.csv", index=False
+    )
+    pd.DataFrame.from_dict(metadata["district_test_metrics"], orient="index").rename_axis(
+        "district"
+    ).reset_index().to_csv(reports_dir / "district_metrics.csv", index=False)
     print(f"Saved {metadata['model_name']} pipeline to {output}")
     print(f"Saved evaluation metadata to {args.metrics_output}")
     print(json.dumps(metadata["protected_test_comparison"], indent=2))

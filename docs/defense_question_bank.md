@@ -1,24 +1,32 @@
-# Defense question bank
+# Defense question bank — 2026 apartment predictor
 
-Answer pattern: **direct answer → exact evidence → limitation or next step**. Never guess.
+Answer pattern: **direct answer → exact evidence → limitation/next step**. Never guess.
 
-| Likely question | Direct answer | Exact evidence to open | Honest limitation / next step |
+| Likely question | My short answer | Evidence reference | Weak area / follow-up |
 |---|---|---|---|
-| Why is this regression? | The target is a continuous USD listing price. | `README.md` → “Problem and scope” | It predicts asking price, not transaction value. |
-| Who is the user? | Buyers, sellers, agents, and analysts needing a historical reference estimate. | `submission/PROJECT_BRIEF.md` → “Problem” | Not suitable for lenders, tax authorities, or legal appraisers. |
-| Where did the data come from? | A CC0 Kaggle copy of 2019 uybor.uz Tashkent listings. | `data/README.md` → “Source and license” | Historical advertisements may not represent today's market. |
-| Why is the currency USD? | The verified source dataset defines `price` in USD. | `data/README.md` → “Schema” | Earlier UZS wording was corrected; no currency conversion is performed. |
-| What did you clean? | I remove 696 exact duplicate rows before splitting and validate all required values and floor relationships. | `reports/data_audit.md`; `src/data.py` → `load_dataset` | Outliers were retained because source verification cannot label them errors. |
-| How did you prevent leakage? | Duplicate removal precedes splitting; no target-derived features are used; encoding/scaling are inside CV pipelines; test data is not used for selection. | `src/model.py` → `_preprocessor`, `train_best_model`; `reports/data_audit.md` | Repeated real properties not caught as exact duplicates may still exist. |
-| Why stratify by district? | District representation is uneven, so stratification improves coverage in train/test and each CV fold. | `reports/data_audit.md`; `src/model.py` → split definitions | Bektemir and Yangihayot remain too small for stable slice claims. |
-| What is the baseline? | Median Dummy Regressor, which ignores features and predicts the training median. | `src/model.py` → `candidate_models`; `reports/model_comparison.csv` | It is intentionally simple, providing a minimum reference. |
-| Why Random Forest? | It had the lowest training-only CV MAE: $11,108 versus $12,099 Gradient Boosting and $15,580 Log Ridge. | `reports/model_comparison.csv` | It is larger and less interpretable than Ridge; permutation/SHAP analysis is future work. |
-| Why did Log Ridge have weak R²? | A mostly additive relationship cannot represent the location/size interactions and luxury-price tails as well as tree ensembles. | `reports/model_comparison.csv`; `reports/results.md` | This is an inference from results, not proof of causality. |
-| Which metric matters most? | MAE is primary because its dollar error is understandable; RMSE exposes large misses, R² explains relative variance, and MAPE gives percentage context. | `README.md` → “Problem and scope”; `reports/results.md` | MAPE can overemphasize low-price listings, so it is supporting only. |
-| Was the final result unseen? | Yes. Selection used CV on 80% development data; the chosen model was then evaluated once on a protected 20% test set. | `src/model.py` → `train_best_model`; `artifacts/metrics.json` → selection rule | The final deployable artifact is refit on all rows only after test evaluation. |
-| What is the biggest error? | A $800,000 Mirobod listing was underpredicted by about $445,038. | `reports/largest_errors.csv`, first row | Missing condition/building prestige likely matters, but the dataset cannot verify the cause. |
-| Is performance equal across districts? | No. Chilonzor is much stronger than sparse/high-end districts; sample count must accompany every slice metric. | `reports/district_metrics.csv`; `reports/results.md` → “District slices” | Slice differences diagnose reliability, not discrimination or causality. |
-| What happens with bad input? | Impossible floors raise an error; unseen districts and out-of-training-range values return warnings. | `demo.ipynb` → cells 6 and 8; `tests/test_data.py`, `tests/test_model.py` | Valid-looking but unrealistic combinations may still pass basic rules. |
-| Can it predict current prices? | No. It estimates historical 2019 asking prices only. | `README.md` → “Limitations and responsible use” | Current data and time-aware recalibration are required. |
-| How is privacy handled? | The dataset has property features/approximate location but no direct seller identity, and demo inputs are not stored. | `README.md` → “Limitations and responsible use”; `data/README.md` | Coordinates still carry neighborhood sensitivity and potential location bias. |
-| How did AI assistance affect the work? | AI assisted with scaffolding, review, tests, and documentation; assistance is disclosed and every claim is tied to reproducible evidence. | `README.md` → “Author and assistance disclosure” | The student must understand and defend every submitted component. |
+| What exactly does the target mean? | It is the USD asking price shown in an August 2026 advertisement, not a verified sale price. | `data/README.md` → “Target” | Negotiated transaction prices may differ. |
+| Why is the project current? | The committed snapshot was collected 22 Aug 2026 and contains listing dates from 4–21 Aug 2026. | `data/apartment_listings_2026.csv` → `listing_date`, `collected_at_utc`; `reports/data_audit.md` | It is a dated snapshot, not permanently live. |
+| Where did the data come from? | Rate-limited public HATA Tashkent apartment-sale catalog pages; no API, identity, contacts, descriptions, or images were collected. | `scripts/collect_current_listings.py`; `data/README.md` → source/privacy | HATA does not state an open redistribution license; written confirmation is recommended. |
+| What cleaning did you perform? | I removed 257 rows outside conservative validity rules and 396 exact feature+target duplicates, leaving 4,214 rows. | `src/data.py` → `VALID_RANGES`, `load_dataset`; `artifacts/metrics.json` → `data_audit` | Rules may remove rare valid cases, but avoid outcome-driven IQR trimming. |
+| How did you prevent duplicate leakage? | Identical district/rooms/size/floor/building-floor/type fingerprints stay in one holdout group and one CV fold. | `src/model.py` → group hash, group split, `StratifiedGroupKFold`; `artifacts/metrics.json` → group counts | Edited relistings can evade exact fingerprint matching. |
+| What is the baseline? | Median Dummy Regressor, which ignores apartment features and predicts the development median. | `src/model.py` → `candidate_models`; `reports/model_comparison.csv` | It is deliberately simple as a minimum reference. |
+| Why Random Forest? | It had the lowest group-safe development CV MAE: $31,298 versus $33,545 Gradient Boosting and $38,301 Log Ridge. | `reports/model_comparison.csv` | It is larger and less interpretable than Ridge. |
+| Was test data used to select the model? | No. Selection used only five-fold development CV; the chosen model was evaluated once on protected groups. | `src/model.py` → `train_best_model`; `artifacts/metrics.json` → selection/split rules | Repeated future checking on the same test would weaken its protection. |
+| What are the unseen-data results? | On 835 protected rows, MAE is $27,195, RMSE $58,887, R² 0.681, and MAPE 24.58%. | `reports/protected_test_metrics.csv` | Large luxury errors make RMSE much higher than MAE. |
+| How much better is it than baseline? | Baseline MAE is $50,900; Random Forest reduces it by 46.6%. | `reports/protected_test_metrics.csv`; `reports/results.md` | Improvement does not make the model appraisal-grade. |
+| What is the biggest failure? | A $1m Shayhontohur listing is predicted near $234,461, an error around $765,539. | `reports/largest_errors.csv`, first row | Missing condition/building/prestige may matter, but that cause is not verified. |
+| Does it perform equally across districts? | No. Mirobod and Shayhontohur MAE are much higher, and Bektemir/Chilonzor slice R² is negative. | `reports/district_metrics.csv`; `reports/results.md` | Slice counts/metrics diagnose reliability, not fairness or causality. |
+| Why no Yangihayot? | No Yangihayot row survived the current source/quality pipeline, so it is out of distribution. | `reports/data_audit.md` → representation; artifact `known_districts` | More representative source data is needed. |
+| Why not use price per square metre? | It directly contains the target price and would leak the answer. | `reports/data_audit.md` → leakage risks; `src/data.py` → feature list | Area itself is retained as a legitimate input. |
+| What happens with invalid input? | Impossible floors raise an error; unseen districts and values outside training ranges create warnings. | `demo.ipynb` invalid-input cell; `tests/test_data.py`, `tests/test_model.py` | Plausible-looking false combinations may still pass basic validation. |
+| Can this predict tomorrow's exact sale price? | No. It estimates an August 2026 asking price from a dated snapshot. | `README.md` → limitations | Refresh/retrain and verified transactions are needed for later market use. |
+| Is SHAP or an ensemble required? | No. The core rubric requires defensible models, unseen evaluation, and delivery; SHAP/ensembles are optional extensions. | `reports/model_comparison.csv`; official rubric | Add interpretation only after core evidence is stable. |
+| How did AI assistance affect the project? | AI assisted scaffolding, review, testing, data-pipeline support, and documentation; assistance is disclosed and claims are reproducible. | `README.md` → assistance disclosure | The student must personally understand and defend every component. |
+
+## Live rehearsal record
+
+Question received: ________________________________________________________________
+
+My live answer: __________________________________________________________________
+
+What I must improve or verify: ____________________________________________________

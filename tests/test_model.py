@@ -19,16 +19,15 @@ def synthetic_dataset(rows: int = 120) -> tuple[pd.DataFrame, pd.Series]:
         {
             "district": np.where(np.arange(rows) % 2, "Chilonzor", "Yunusobod"),
             "rooms": rng.integers(1, 6, rows),
-            "size": rng.uniform(25, 180, rows),
+            "size_m2": rng.uniform(25, 180, rows),
             "level": rng.integers(1, 5, rows),
             "max_levels": np.full(rows, 5),
-            "lat": rng.uniform(41.25, 41.38, rows),
-            "lng": rng.uniform(69.18, 69.33, rows),
+            "is_new_building": rng.integers(0, 2, rows),
         }
     )
     target = pd.Series(
         10_000
-        + raw["size"] * 700
+        + raw["size_m2"] * 700
         + raw["rooms"] * 2_500
         + (raw["district"] == "Yunusobod") * 8_000,
         dtype=float,
@@ -55,17 +54,18 @@ def test_train_save_load_and_predict(tmp_path) -> None:
         artifact,
         district="Chilonzor",
         rooms=3,
-        size=70,
+        size_m2=70,
         level=3,
         max_levels=5,
-        lat=41.30,
-        lng=69.21,
+        is_new_building=0,
     )
 
     assert price > 0
     assert warnings == []
     assert metadata["model_name"] != "median_baseline"
     assert "protected_test_comparison" in metadata
+    assert metadata["holdout_group_overlap"] == 0
+    assert metadata["cv_group_overlap_max"] == 0
 
 
 def test_predict_warns_for_unseen_district(tmp_path) -> None:
@@ -76,11 +76,10 @@ def test_predict_warns_for_unseen_district(tmp_path) -> None:
         artifact,
         district="Unknown",
         rooms=3,
-        size=70,
+        size_m2=70,
         level=3,
         max_levels=5,
-        lat=41.30,
-        lng=69.21,
+        is_new_building=0,
     )
     assert price > 0
     assert any("not present" in warning for warning in warnings)
