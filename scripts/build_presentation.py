@@ -266,7 +266,7 @@ def build() -> Path:
     add_title(
         slide,
         "FROM 4,867 LISTINGS TO A GROUP-SAFE TEST",
-        "Privacy-minimized public HATA snapshot collected 22 August 2026.",
+        "Privacy-minimized public HATA snapshot from August 2026.",
     )
     steps = [
         ("SOURCE", "4,867 parsed\n11 districts"),
