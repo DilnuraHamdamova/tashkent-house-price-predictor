@@ -8,6 +8,24 @@
 **[Bugungi pitch uchun to‘liq o‘zbekcha qo‘llanma](docs/defense_day_guide_uz.md)** ·
 **[Exact five-minute English speech](docs/defense_pitch_script_en.md)**
 
+## Interactive website demo
+
+The repository includes a Streamlit website in `app.py`. Run it locally with:
+
+```bash
+python -m pip install -r requirements.txt
+streamlit run app.py
+```
+
+For a public URL, sign in to [Streamlit Community Cloud](https://share.streamlit.io/), choose
+**Create app**, and enter:
+
+- Repository: `DilnuraHamdamova/tashkent-house-price-predictor`
+- Branch: `main`
+- Main file path: `app.py`
+
+The website loads the same committed preprocessing/model pipeline used by the CLI and Colab demo.
+
 An end-to-end regression capstone that estimates the advertised USD asking price of a Tashkent
 apartment from current August 2026 listing attributes. The repository includes a reproducible
 privacy-minimized snapshot, feature-group-safe evaluation, a saved inference pipeline, validation,
