@@ -42,7 +42,7 @@
 - [x] Updated Individual Project Brief generated for the 2026 apartment scope
 - [ ] Mentor approval of the revised Project Brief
 - [ ] Fresh browser-based Colab run by a named peer
-- [ ] Public CI run after the 2026 update is committed and pushed
+- [x] Current 2026 revision committed/pushed; public CI run 32561644942 passed
 - [ ] Two timed pitch rehearsals
 - [ ] One three-claim “Show Me Where” peer challenge
 - [ ] Final defense attendance and personal Q&A

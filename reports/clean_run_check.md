@@ -28,11 +28,14 @@ Date checked: 22 August 2026 (Asia/Samarkand)
 
 ## External reproduction status
 
-The repository's current code, notebooks, dataset snapshot, model artifact, and instructions pass local verification. The older public CI run predates this 2026 rebuild and is not evidence for the current revision. A new public CI run can only be cited after the owner commits and pushes the revision.
+The repository's current code, notebooks, dataset snapshot, model artifact, and instructions pass
+local verification. GitHub Actions run
+[32561644942](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/actions/runs/32561644942)
+checked commit `e31bc95` and completed successfully on 22 August 2026.
 
 A named peer or mentor has also not yet recorded a browser-based Google Colab run. Before defense, one reviewer should click the README Colab badge, choose **Runtime -> Run all**, record the date/result here, and report any hidden-state or access issue.
 
-- Current-revision public CI URL: ____________________
+- Current-revision public CI URL: https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/actions/runs/32561644942
 - Peer/reviewer: ____________________
 - Date: ____________________
 - Colab result: PASS / FAIL

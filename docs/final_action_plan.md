@@ -7,7 +7,7 @@ explanation → cosmetic improvement.
 |---:|---|---|---|---|---|
 | 1 | Source-use evidence | Ask HATA for written permission for educational snapshot redistribution, or agree with mentor on private snapshot delivery. | Dilnura | Before submission | Written confirmation or mentor-approved handling is retained. |
 | 2 | `demo.ipynb` | Run all in a fresh browser Colab from GitHub. | Dilnura + peer | Before defense | Peer name/date/PASS recorded in `reports/clean_run_check.md`. |
-| 3 | GitHub repository | Commit/push 2026 snapshot, model, metrics, demo, docs, and deck; verify CI. | Dilnura | Before defense | Public CI passes and exact run URL is recorded. |
+| 3 | GitHub repository | **DONE:** commit `e31bc95` pushed; GitHub Actions run `32561644942` passed. | Dilnura | 22 Aug 2026 | Current remote commit and successful run URL are recorded. |
 | 4 | Five-minute pitch | Rehearse `docs/defense_pitch_outline.md` twice with a timer. | Dilnura | Before defense | Both attempts are ≤5:00 and honestly logged. |
 | 5 | Show-Me-Where audit | Peer challenges current-data, leakage, and unseen-result claims. | Dilnura + peer | Before defense | Three PASS/FAIL results and missing context are recorded. |
 | 6 | Mentor approval | Send the completed 2026 asking-price Project Brief for approval and retain the response. | Dilnura | Before defense | Approval evidence is available without committing private correspondence. |
