@@ -6,4 +6,4 @@ def test_streamlit_app_renders_without_exception():
 
     assert not app.exception
     assert app.title or app.markdown
-    assert app.button[0].label == "Estimate asking price"
+    assert app.button[0].label == "Estimate and compare"

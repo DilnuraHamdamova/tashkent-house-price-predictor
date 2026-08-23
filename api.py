@@ -27,7 +27,8 @@ class PredictionOutput(BaseModel):
 
     estimated_asking_price_usd: float
     currency: str = "USD"
-    snapshot: str = "August 2026"
+    data_window: dict[str, str | None]
+    reference_error_p80_usd: float
     warnings: list[str]
     disclaimer: str
 
@@ -40,8 +41,8 @@ def get_artifact():
 
 app = FastAPI(
     title="Tashkent Apartment Price API",
-    summary="Validated inference for the August 2026 asking-price model.",
-    version="1.0.0",
+    summary="Validated inference for a versioned Tashkent asking-price model.",
+    version="1.1.0",
 )
 
 
@@ -61,6 +62,11 @@ def model_info() -> dict[str, object]:
         "target": metadata["target"],
         "row_count": metadata["row_count"],
         "known_districts": metadata["known_districts"],
+        "data_window": {
+            "from": metadata["data_audit"].get("listing_date_min"),
+            "to": metadata["data_audit"].get("listing_date_max"),
+        },
+        "reference_error_p80_usd": metadata["protected_test_absolute_error_quantiles"]["p80_usd"],
         "protected_test": metadata["protected_test_comparison"]["random_forest"],
     }
 
@@ -81,9 +87,16 @@ def predict(payload: ApartmentInput) -> PredictionOutput:
     except ValueError as error:
         raise HTTPException(status_code=422, detail=str(error)) from error
 
+    metadata = get_artifact()["metadata"]
     return PredictionOutput(
         estimated_asking_price_usd=round(price, 2),
+        data_window={
+            "from": metadata["data_audit"].get("listing_date_min"),
+            "to": metadata["data_audit"].get("listing_date_max"),
+        },
+        reference_error_p80_usd=round(
+            metadata["protected_test_absolute_error_quantiles"]["p80_usd"], 2
+        ),
         warnings=prediction_warnings,
         disclaimer="Advertised asking-price reference only; not a sale price or appraisal.",
     )
-

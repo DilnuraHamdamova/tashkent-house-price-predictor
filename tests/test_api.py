@@ -13,6 +13,7 @@ def test_health_and_model_info():
     assert health.json() == {"status": "ok", "model": "random_forest"}
     assert info.status_code == 200
     assert info.json()["target"] == "listing_price_usd"
+    assert info.json()["data_window"] == {"from": "2026-08-04", "to": "2026-08-21"}
 
 
 def test_predict_checked_example():
@@ -31,6 +32,8 @@ def test_predict_checked_example():
     assert response.status_code == 200
     result = response.json()
     assert round(result["estimated_asking_price_usd"]) == 97098
+    assert result["data_window"] == {"from": "2026-08-04", "to": "2026-08-21"}
+    assert round(result["reference_error_p80_usd"]) == 35095
     assert result["warnings"] == []
 
 
@@ -49,4 +52,3 @@ def test_predict_rejects_impossible_floor():
 
     assert response.status_code == 422
     assert "cannot exceed" in response.json()["detail"]
-

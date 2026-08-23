@@ -1,6 +1,6 @@
 {
   "model_name": "random_forest",
-  "trained_at_utc": "2026-08-22T00:17:27.891530+00:00",
+  "trained_at_utc": "2026-08-23T17:52:44.110186+00:00",
   "random_state": 42,
   "row_count": 4214,
   "train_row_count": 3379,
@@ -27,28 +27,28 @@
       "cv_mae_std_usd": 6427.752880977065,
       "cv_rmse_mean_usd": 123587.31681811903,
       "cv_r2_mean": -0.06796335639938786,
-      "fit_time_mean_seconds": 0.04164528846740723
+      "fit_time_mean_seconds": 0.06016073226928711
     },
     "log_ridge": {
       "cv_mae_mean_usd": 38301.2107532544,
       "cv_mae_std_usd": 6704.588068080405,
       "cv_rmse_mean_usd": 105754.97031019119,
       "cv_r2_mean": 0.218688071657502,
-      "fit_time_mean_seconds": 0.06301159858703613
+      "fit_time_mean_seconds": 0.06812219619750977
     },
     "random_forest": {
       "cv_mae_mean_usd": 31298.12179612737,
       "cv_mae_std_usd": 3251.5972131948197,
-      "cv_rmse_mean_usd": 80393.87028218924,
+      "cv_rmse_mean_usd": 80393.87028218922,
       "cv_r2_mean": 0.556026373277011,
-      "fit_time_mean_seconds": 1.518087100982666
+      "fit_time_mean_seconds": 1.8255571842193603
     },
     "gradient_boosting": {
       "cv_mae_mean_usd": 33545.099201330595,
       "cv_mae_std_usd": 5184.62530079453,
       "cv_rmse_mean_usd": 94081.19107802707,
       "cv_r2_mean": 0.39589204600513117,
-      "fit_time_mean_seconds": 2.358242225646973
+      "fit_time_mean_seconds": 3.1022690296173097
     }
   },
   "protected_test_comparison": {
@@ -60,18 +60,18 @@
     },
     "random_forest": {
       "mae_usd": 27195.253059237242,
-      "rmse_usd": 58886.805681101614,
-      "r2": 0.6807483835604615,
+      "rmse_usd": 58886.80568110161,
+      "r2": 0.6807483835604616,
       "mape_percent": 24.58405863457492
     }
   },
   "district_test_metrics": {
     "Bektemir": {
       "rows": 68,
-      "mae_usd": 12997.736103456158,
+      "mae_usd": 12997.73610345616,
       "rmse_usd": 37399.38840327407,
       "r2": -1.7768966322701152,
-      "mape_percent": 22.544066425285536
+      "mape_percent": 22.544066425285532
     },
     "Chilonzor": {
       "rows": 68,
@@ -98,7 +98,7 @@
       "rows": 86,
       "mae_usd": 18286.51669983092,
       "rmse_usd": 27923.82932681653,
-      "r2": 0.48966498649417833,
+      "r2": 0.48966498649417844,
       "mape_percent": 20.96683747825758
     },
     "Sergeli": {
@@ -106,20 +106,20 @@
       "mae_usd": 11365.434940105659,
       "rmse_usd": 19475.78459116598,
       "r2": 0.25441503871033433,
-      "mape_percent": 18.789512632348558
+      "mape_percent": 18.78951263234856
     },
     "Shayhontohur": {
       "rows": 112,
       "mae_usd": 64541.1661685761,
       "rmse_usd": 124601.35080482565,
       "r2": 0.6682556274925677,
-      "mape_percent": 33.73557018817812
+      "mape_percent": 33.735570188178116
     },
     "Uchtepa": {
       "rows": 77,
-      "mae_usd": 13421.9616376227,
-      "rmse_usd": 19750.83174877592,
-      "r2": 0.5634821611433253,
+      "mae_usd": 13421.961637622699,
+      "rmse_usd": 19750.831748775916,
+      "r2": 0.5634821611433254,
       "mape_percent": 22.440540662195662
     },
     "Yakkasaroy": {
@@ -127,7 +127,7 @@
       "mae_usd": 37397.18290918735,
       "rmse_usd": 60493.85366261036,
       "r2": 0.46331218639150207,
-      "mape_percent": 25.776184996427844
+      "mape_percent": 25.776184996427837
     },
     "Yashnobod": {
       "rows": 59,
@@ -138,10 +138,10 @@
     },
     "Yunusobod": {
       "rows": 131,
-      "mae_usd": 27583.348034942333,
+      "mae_usd": 27583.348034942337,
       "rmse_usd": 42037.459520047654,
       "r2": 0.6589973726155164,
-      "mape_percent": 25.46422145137271
+      "mape_percent": 25.464221451372715
     }
   },
   "largest_test_errors": [
@@ -168,8 +168,8 @@
       "is_new_building": 1,
       "floor_ratio": 0.42857142857142855,
       "actual_usd": 1200000.0,
-      "predicted_usd": 681974.6247952381,
-      "absolute_error_usd": 518025.37520476186
+      "predicted_usd": 681974.6247952383,
+      "absolute_error_usd": 518025.37520476175
     },
     {
       "source_index": 783,
@@ -276,6 +276,11 @@
       "absolute_error_usd": 293173.2678531024
     }
   ],
+  "protected_test_absolute_error_quantiles": {
+    "p50_usd": 11719.866746031767,
+    "p80_usd": 35094.512455238066,
+    "p90_usd": 61075.98584121217
+  },
   "final_fit": "selected pipeline refitted on all de-duplicated rows after test evaluation",
   "training_ranges": {
     "rooms": {

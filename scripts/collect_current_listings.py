@@ -72,21 +72,13 @@ def _common_fields(card: str, expected_action: str) -> dict[str, object]:
         raise ValueError("Card is outside the requested catalog")
     relative_url = _match(r'href="(/en/listings/object/[^"]+)"', card, "URL")
     listing_id = int(_match(r"-(\d+)$", relative_url, "listing id"))
-    label = _match(
-        r'aria-label="([^"]*?-room apartment, [^"]*?m² for sale)"', card, "label"
-    )
+    label = _match(r'aria-label="([^"]*?-room apartment, [^"]*?m² for sale)"', card, "label")
     label_match = re.search(r"(\d+)-room apartment, ([\d.]+) m² for sale", label)
     if label_match is None:
         raise ValueError("Could not parse rooms and area")
-    district_source = _match(
-        rf"({DISTRICT_PATTERN}) District, Tashkent</span>", card, "district"
-    )
-    date_text = _match(
-        r'<div class="mt-2[^>]*>.*?<span>([^<>]+)</span>', card, "listing date"
-    )
-    price_fragment = _match(
-        r'<span class="font-extrabold[^>]*>(.*?)</span>', card, "price"
-    )
+    district_source = _match(rf"({DISTRICT_PATTERN}) District, Tashkent</span>", card, "district")
+    date_text = _match(r'<div class="mt-2[^>]*>.*?<span>([^<>]+)</span>', card, "listing date")
+    price_fragment = _match(r'<span class="font-extrabold[^>]*>(.*?)</span>', card, "price")
     price_digits = re.sub(r"[^0-9]", "", _plain_text(price_fragment))
     if not price_digits:
         raise ValueError("Could not parse price")
@@ -112,12 +104,8 @@ def parse_catalog_page(page_html: str, property_type: str) -> tuple[list[dict[st
             common = _common_fields(card, expected)
             raw_area = float(common.pop("raw_area_m2"))
             if property_type == "apartment":
-                floor_fragment = _match(
-                    r"(<span[^>]*>\d+/\d+.*?fl\.</span>)", card, "floor"
-                )
-                floor_match = re.search(
-                    r"(\d+)\s*/\s*(\d+)\s*fl\.", _plain_text(floor_fragment)
-                )
+                floor_fragment = _match(r"(<span[^>]*>\d+/\d+.*?fl\.</span>)", card, "floor")
+                floor_match = re.search(r"(\d+)\s*/\s*(\d+)\s*fl\.", _plain_text(floor_fragment))
                 if floor_match is None:
                     raise ValueError("Could not parse floor")
                 rows.append(

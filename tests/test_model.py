@@ -64,6 +64,7 @@ def test_train_save_load_and_predict(tmp_path) -> None:
     assert warnings == []
     assert metadata["model_name"] != "median_baseline"
     assert "protected_test_comparison" in metadata
+    assert metadata["protected_test_absolute_error_quantiles"]["p80_usd"] > 0
     assert metadata["holdout_group_overlap"] == 0
     assert metadata["cv_group_overlap_max"] == 0
 

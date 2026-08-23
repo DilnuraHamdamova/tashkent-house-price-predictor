@@ -116,9 +116,7 @@ def train_best_model(features: pd.DataFrame, target: pd.Series) -> tuple[Any, di
     train_y, test_y = target.loc[train_mask], target.loc[test_mask]
     train_feature_groups = feature_groups.loc[train_mask]
     cv = StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
-    splits = list(
-        cv.split(train_x, train_x["district"], groups=train_feature_groups)
-    )
+    splits = list(cv.split(train_x, train_x["district"], groups=train_feature_groups))
     holdout_group_overlap = len(set(train_groups["group"]) & set(test_groups["group"]))
     cv_group_overlap_max = max(
         len(
@@ -168,6 +166,10 @@ def train_best_model(features: pd.DataFrame, target: pd.Series) -> tuple[Any, di
     error_frame["actual_usd"] = test_y
     error_frame["predicted_usd"] = selected_predictions
     error_frame["absolute_error_usd"] = np.abs(test_y.to_numpy() - selected_predictions)
+    absolute_error_quantiles = {
+        f"p{int(quantile * 100)}_usd": float(error_frame["absolute_error_usd"].quantile(quantile))
+        for quantile in (0.5, 0.8, 0.9)
+    }
     largest_errors = (
         error_frame.nlargest(10, "absolute_error_usd")
         .reset_index(names="source_index")
@@ -206,6 +208,7 @@ def train_best_model(features: pd.DataFrame, target: pd.Series) -> tuple[Any, di
         "protected_test_comparison": test_comparison,
         "district_test_metrics": district_metrics,
         "largest_test_errors": largest_errors,
+        "protected_test_absolute_error_quantiles": absolute_error_quantiles,
         "final_fit": "selected pipeline refitted on all de-duplicated rows after test evaluation",
         "training_ranges": {
             column: {"min": float(features[column].min()), "max": float(features[column].max())}

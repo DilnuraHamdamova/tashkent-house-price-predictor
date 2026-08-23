@@ -21,7 +21,10 @@ For a public URL, sign in to [Streamlit Community Cloud](https://share.streamlit
 - Branch: `main`
 - Main file path: `app.py`
 
-The website loads the same committed preprocessing/model pipeline used by the CLI and Colab demo.
+The product-style website loads the same committed pipeline used by the API and Colab. It now
+shows a dynamic data-reference period, snapshot freshness, an empirical protected-test error band,
+price per square metre, comparable-listing aggregates, and a district market explorer. Dates are
+read from the active dataset rather than hard-coded in the interface.
 
 ![Streamlit apartment price predictor](docs/assets/streamlit-demo.png)
 
@@ -53,12 +56,13 @@ curl -X POST http://localhost:8000/predict \
   -d '{"district":"Chilonzor","size_m2":70,"rooms":3,"level":3,"max_levels":5,"is_new_building":false}'
 ```
 
-The response returns approximately `$97,098 USD`, warnings, snapshot scope, and a disclaimer.
+The response returns approximately `$97,098 USD`, warnings, the model's dynamic data window,
+protected-test p80 reference error, and a disclaimer.
 
-An end-to-end regression capstone that estimates the advertised USD asking price of a Tashkent
-apartment from current August 2026 listing attributes. The repository includes a reproducible
+An end-to-end regression product prototype that estimates the advertised USD asking price of a
+Tashkent apartment from a versioned market snapshot. The repository includes a reproducible
 privacy-minimized snapshot, feature-group-safe evaluation, a saved inference pipeline, validation,
-tests, an interactive website, a Colab demo, and reproducible documentation.
+tests, an interactive market website, a JSON API, Docker delivery, and reproducible documentation.
 
 **Selected track:** Individual Project Track
 **Student:** Dilnura Hamdamova
@@ -182,6 +186,30 @@ python -m src.train
 The collector follows the public catalog rather than disallowed API routes, uses a delay, and
 checkpoints progress. Reconfirm source terms before each refresh.
 
+### Approved multi-source ingestion
+
+The source-neutral ingestion layer accepts any licensed API/CSV export that follows the documented
+schema. Every row must keep its source provenance. To merge multiple approved exports and retain
+the latest observation for each source listing:
+
+```bash
+python scripts/build_training_dataset.py partner_a.csv partner_b.csv \
+  --output data/apartment_listings_current.csv
+python -m src.train --data data/apartment_listings_current.csv
+```
+
+For a single legacy file without a `source` column, add an explicit source name:
+
+```bash
+python scripts/build_training_dataset.py export.csv --source approved-partner \
+  --output data/apartment_listings_current.csv
+```
+
+This makes the product ready for multiple dates and approved providers, but it does not grant
+permission to scrape or redistribute any provider's content. Production automation requires a
+written data agreement or official API, scheduled collection, data-quality alerts, retraining,
+time-based evaluation, artifact versioning, and rollback.
+
 ## Colab demo
 
 Open the Colab badge and choose **Runtime → Run all**. The notebook clones the repository when
@@ -190,7 +218,8 @@ new-build example, and demonstrates invalid-floor validation without hidden note
 
 ## Limitations and responsible use
 
-- The model estimates August 2026 advertisements; it is not a permanently live forecast.
+- The committed model learns from the displayed snapshot window; it is not permanently live until
+  an approved recurring feed and monitored retraining workflow are connected.
 - Asking price may differ materially from completed transaction price.
 - User-entered listings can be stale, inaccurate, duplicated, or miscategorized.
 - Same-feature grouping reduces leakage but cannot identify every relisted physical apartment.
