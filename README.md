@@ -23,8 +23,12 @@ For a public URL, sign in to [Streamlit Community Cloud](https://share.streamlit
 
 The product-style website loads the same committed pipeline used by the API and Colab. It now
 shows a dynamic data-reference period, snapshot freshness, an empirical protected-test error band,
-price per square metre, comparable-listing aggregates, and a district market explorer. Dates are
-read from the active dataset rather than hard-coded in the interface.
+price per square metre, comparable-listing aggregates, a district market explorer, and optional
+in-session apartment photo preview. Dates are read from the active dataset rather than hard-coded
+in the interface. Uploaded photos are not stored and do not affect the current tabular model.
+
+The hero uses an original AI-generated illustrative image, not a source listing photograph. Real
+listing galleries require image URLs and display rights from an approved provider API.
 
 ![Streamlit apartment price predictor](docs/assets/streamlit-demo.png)
 

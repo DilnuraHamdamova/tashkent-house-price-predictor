@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import os
 from datetime import date
 from pathlib import Path
@@ -14,6 +15,7 @@ from src.model import load_artifact, predict_price
 
 ARTIFACT_PATH = Path(os.getenv("MODEL_ARTIFACT_PATH", "artifacts/apartment_price_pipeline.joblib"))
 MARKET_DATA_PATH = Path(os.getenv("MARKET_DATA_PATH", "data/apartment_listings_2026.csv"))
+HERO_IMAGE_PATH = Path("docs/assets/apartment-hero.webp")
 
 st.set_page_config(
     page_title="Tashkent Apartment Market",
@@ -26,11 +28,12 @@ st.markdown(
     <style>
     .stApp {background: linear-gradient(145deg, #f7faff 0%, #edf4ff 55%, #f7fbff 100%);}
     .block-container {max-width: 1180px; padding-top: 2rem;}
-    .hero {padding: 1.6rem 1.7rem; border-radius: 22px; color: white;
-           background: linear-gradient(120deg, #061846, #0d5bff 68%, #00a6a6);
+    .hero {padding: 2.2rem 2rem; border-radius: 22px; color: white; min-height: 260px;
+           display:flex; flex-direction:column; justify-content:center;
            margin-bottom: 1rem; box-shadow: 0 16px 38px rgba(13,91,255,.18);}
     .hero h1 {margin: 0; font-size: 2.45rem; line-height: 1.12;}
-    .hero p {margin: .65rem 0 0; opacity: .94; font-size: 1.05rem;}
+    .hero p {margin: .65rem 0 0; opacity: .96; font-size: 1.05rem;}
+    .hero-note {margin-top:1.1rem; font-size:.76rem; opacity:.78;}
     .result {padding: 1.35rem; border: 1px solid #0d9d59; border-radius: 18px;
              background: #effcf5; text-align: center; box-shadow: 0 10px 25px rgba(8,122,68,.08);}
     .result-label {color: #52627e; font-size: .95rem;}
@@ -47,6 +50,13 @@ st.markdown(
 @st.cache_resource
 def get_artifact():
     return load_artifact(ARTIFACT_PATH)
+
+
+@st.cache_data
+def asset_data_uri(path: str, modified_ns: int) -> str:
+    del modified_ns
+    encoded = base64.b64encode(Path(path).read_bytes()).decode("ascii")
+    return f"data:image/webp;base64,{encoded}"
 
 
 @st.cache_data
@@ -105,13 +115,18 @@ reference_period = (
     else f"{earliest_listing:%b %Y}–{latest_listing:%b %Y}"
 )
 freshness_label = "Fresh snapshot" if age_days <= 14 else f"Snapshot is {age_days} days old"
+hero_uri = asset_data_uri(str(HERO_IMAGE_PATH), HERO_IMAGE_PATH.stat().st_mtime_ns)
 
 st.markdown(
     f"""
-    <div class="hero">
+    <div class="hero" style="background-image:
+      linear-gradient(90deg, rgba(3,17,52,.97) 0%, rgba(5,35,91,.88) 38%,
+      rgba(5,35,91,.22) 72%, rgba(5,35,91,.08) 100%), url('{hero_uri}');
+      background-size:cover; background-position:center;">
       <h1>Tashkent Apartment Market</h1>
       <p>AI asking-price estimate + comparable listing evidence<br>
       Reference period: {reference_period}</p>
+      <div class="hero-note">Illustrative product image · not a listing or valuation input</div>
     </div>
     <span class="status">● {freshness_label}</span>
     """,
@@ -138,10 +153,21 @@ with estimate_tab:
         with right:
             max_levels = st.number_input("Building floors", 1, 50, 5, 1)
             building_type = st.radio("Building type", ["Resale", "New building"], horizontal=True)
+        uploaded_photos = st.file_uploader(
+            "Apartment photos (optional)",
+            type=["jpg", "jpeg", "png", "webp"],
+            accept_multiple_files=True,
+            help=(
+                "Preview up to five photos in this browser session. Photos are not saved and do "
+                "not affect the current tabular model."
+            ),
+        )
         submitted = st.form_submit_button("Estimate and compare", type="primary", width="stretch")
 
     if submitted:
         try:
+            if len(uploaded_photos) > 5:
+                raise ValueError("Upload at most five apartment photos")
             is_new_building = int(building_type == "New building")
             price, prediction_warnings = predict_price(
                 artifact,
@@ -175,6 +201,16 @@ with estimate_tab:
                 f"Estimated ${price / size_m2:,.0f}/m². The reference band uses the protected-test "
                 "80th-percentile absolute error; it is not a guaranteed prediction interval."
             )
+            if uploaded_photos:
+                st.subheader("Your apartment photos")
+                st.image(
+                    uploaded_photos,
+                    caption=[photo.name for photo in uploaded_photos],
+                    width="stretch",
+                )
+                st.caption(
+                    "Photos are preview-only and are not stored or used by the current model."
+                )
             comparable = similar_listings(
                 market,
                 district=district,
