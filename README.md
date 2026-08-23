@@ -5,9 +5,6 @@
 
 **[View presentation](presentation/README.md)** · **[PowerPoint](presentation/Tashkent_House_Price_Defense.pptx)** · **[PDF](presentation/Tashkent_House_Price_Defense.pdf)**
 
-**[Bugungi pitch uchun to‘liq o‘zbekcha qo‘llanma](docs/defense_day_guide_uz.md)** ·
-**[Exact five-minute English speech](docs/defense_pitch_script_en.md)**
-
 ## Interactive website demo
 
 The repository includes a Streamlit website in `app.py`. Run it locally with:
@@ -29,7 +26,7 @@ The website loads the same committed preprocessing/model pipeline used by the CL
 An end-to-end regression capstone that estimates the advertised USD asking price of a Tashkent
 apartment from current August 2026 listing attributes. The repository includes a reproducible
 privacy-minimized snapshot, feature-group-safe evaluation, a saved inference pipeline, validation,
-tests, a Colab demo, and defense evidence.
+tests, an interactive website, a Colab demo, and reproducible documentation.
 
 **Selected track:** Individual Project Track
 **Student:** Dilnura Hamdamova
@@ -51,9 +48,9 @@ current Tashkent apartment advertisements. This is supervised regression:
 ## Current 2026 data
 
 The committed `data/apartment_listings_2026.csv` is a privacy-minimized snapshot of public
-[HATA Tashkent sale listings](https://hata.uz/en/listings/sale/flats/tashkent), collected on
-22 August 2026. Listing dates range from 4–21 August 2026. The collector retains factual property
-fields and source URLs but excludes seller identity, contacts, descriptions, and images.
+[HATA Tashkent sale listings](https://hata.uz/en/listings/sale/flats/tashkent), collected in
+August 2026. The collector retains factual property fields and source URLs but excludes seller
+identity, contacts, descriptions, and images.
 
 The snapshot contains 4,867 unique complete-feature listings. Conservative range checks remove
 257 obvious category/currency/unit errors, then 396 exact feature + target duplicates are removed,
@@ -169,18 +166,3 @@ new-build example, and demonstrates invalid-floor validation without hidden note
 - Geographic price patterns may reproduce historical and current location inequality.
 - Predictions require human review and recent comparable listings. Do not use this educational
   model for lending, taxation, legal appraisal, or high-stakes financial decisions.
-
-## Author and assistance disclosure
-
-**Dilnura Hamdamova** — Individual Project Track. AI coding assistance was used for scaffolding,
-review, testing support, and documentation. The author remains responsible for verifying,
-understanding, and defending every submitted claim.
-
-## Defense evidence
-
-The [official evidence matrix](docs/capstone_evidence_matrix.md),
-[five-minute pitch](docs/defense_pitch_outline.md),
-[complete defense-day guide](docs/defense_day_guide_uz.md),
-[question bank](docs/defense_question_bank.md),
-[final action plan](docs/final_action_plan.md), and
-[clean-run record](reports/clean_run_check.md) form the defense preparation pack.
