@@ -1,5 +1,8 @@
 # Dataset card — 2026 Tashkent apartment listings
 
+See [`DATA_SOURCE_NOTICE.md`](../DATA_SOURCE_NOTICE.md) for provenance, rights boundaries, and
+redistribution guidance.
+
 ## Source and snapshot
 
 - Source: [HATA apartments for sale in Tashkent](https://hata.uz/en/listings/sale/flats/tashkent)

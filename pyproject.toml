@@ -9,11 +9,13 @@ description = "Reproducible apartment price prediction for Tashkent"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "fastapi==0.141.1",
     "joblib>=1.4,<2",
     "numpy>=1.26,<3",
     "pandas>=2.2,<3",
     "scikit-learn==1.9.0",
     "streamlit==1.62.0",
+    "uvicorn[standard]==0.52.4",
 ]
 
 [tool.pytest.ini_options]

@@ -23,6 +23,36 @@ For a public URL, sign in to [Streamlit Community Cloud](https://share.streamlit
 
 The website loads the same committed preprocessing/model pipeline used by the CLI and Colab demo.
 
+![Streamlit apartment price predictor](docs/assets/streamlit-demo.png)
+
+## FastAPI and Docker
+
+The same model is available through a validated JSON API:
+
+```bash
+uvicorn api:app --host 0.0.0.0 --port 8000
+```
+
+Open `http://localhost:8000/docs` for interactive OpenAPI documentation. Key routes are
+`GET /health`, `GET /model-info`, and `POST /predict`.
+
+Build and run the production-style container:
+
+```bash
+docker build -t tashkent-apartment-price-api .
+docker run --rm -p 8000:8000 tashkent-apartment-price-api
+```
+
+Checked request:
+
+```bash
+curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"district":"Chilonzor","size_m2":70,"rooms":3,"level":3,"max_levels":5,"is_new_building":false}'
+```
+
+The response returns approximately `$97,098 USD`, warnings, snapshot scope, and a disclaimer.
+
 An end-to-end regression capstone that estimates the advertised USD asking price of a Tashkent
 apartment from current August 2026 listing attributes. The repository includes a reproducible
 privacy-minimized snapshot, feature-group-safe evaluation, a saved inference pipeline, validation,
@@ -60,7 +90,9 @@ Yangihayot is absent. See [data/README.md](data/README.md) and
 
 The target is an **advertised asking price**, not a verified transaction price. HATA does not
 publish an open-data license; source rights remain with HATA and listing authors. Written
-redistribution permission is a recommended external confirmation before wider reuse.
+redistribution permission is a recommended external confirmation before wider reuse. See
+[DATA_SOURCE_NOTICE.md](DATA_SOURCE_NOTICE.md) for the code/data license boundary and safe reuse
+options.
 
 ## Method
 
