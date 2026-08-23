@@ -25,6 +25,8 @@ The website loads the same committed preprocessing/model pipeline used by the CL
 
 ![Streamlit apartment price predictor](docs/assets/streamlit-demo.png)
 
+Portfolio companion: [Evidence RAG Assistant](https://github.com/DilnuraHamdamova/evidence-rag-assistant), a citation-first LLM/RAG project with offline retrieval, evaluation, FastAPI, and Docker.
+
 ## FastAPI and Docker
 
 The same model is available through a validated JSON API:
