@@ -12,6 +12,7 @@ from pptx.util import Inches, Pt
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "presentation" / "Tashkent_Apartment_Price_Defense.pptx"
+LIVE_URL = "https://tashkent-apartment-price-predictor.streamlit.app"
 
 NAVY = RGBColor(5, 24, 70)
 BLUE = RGBColor(13, 91, 255)
@@ -412,7 +413,7 @@ def build() -> Path:
     add_title(
         slide,
         "ONE REAL INPUT → ONE VISIBLE RESULT",
-        "Colab route: setup → load saved pipeline → predict → show validation error.",
+        "Website route: enter a real apartment → estimate → comparable market evidence.",
     )
     add_box(slide, 0.65, 2.22, 5.15, 3.75, fill=LIGHT, line=BLUE)
     add_text(slide, "RAW INPUT", 0.98, 2.52, 1.55, 0.32, size=16, color=BLUE, bold=True)
@@ -424,7 +425,7 @@ def build() -> Path:
     add_box(slide, 6.75, 2.22, 5.90, 1.72, fill=WHITE, line=GREEN)
     add_text(
         slide,
-        "ESTIMATED AUGUST 2026 ASKING PRICE",
+        "ESTIMATED ADVERTISED ASKING PRICE",
         7.05,
         2.55,
         5.25,
@@ -451,9 +452,9 @@ def build() -> Path:
     add_text(
         slide, "Level 9 / max 5  →  clear ValueError", 7.05, 4.98, 5.12, 0.40, size=20, bold=True
     )
-    add_text(
+    live_link = add_text(
         slide,
-        "Open: README Colab badge  •  Run all  •  Do not tour source code unless asked",
+        "LIVE DEMO: tashkent-apartment-price-predictor.streamlit.app",
         1.15,
         6.38,
         11.05,
@@ -463,6 +464,7 @@ def build() -> Path:
         bold=True,
         align=PP_ALIGN.CENTER,
     )
+    live_link.click_action.hyperlink.address = LIVE_URL
 
     # Slide 7 — responsible use, next step, close
     slide = presentation.slides.add_slide(blank)

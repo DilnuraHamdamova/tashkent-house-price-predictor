@@ -2,6 +2,7 @@
 
 ## Open or download
 
+- **[Open the live apartment market website](https://tashkent-apartment-price-predictor.streamlit.app)**
 - **[Open the complete presentation as one PDF](Tashkent_Apartment_Price_Defense.pdf)**
 - **[Download the complete PDF](https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor/raw/refs/heads/main/presentation/Tashkent_Apartment_Price_Defense.pdf)**
 - [Download the editable PowerPoint](https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor/raw/refs/heads/main/presentation/Tashkent_Apartment_Price_Defense.pptx)

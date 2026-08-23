@@ -3,6 +3,8 @@
 [![CI](https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor/actions/workflows/ci.yml/badge.svg)](https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor/actions/workflows/ci.yml)
 [![Open demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/DilnuraHamdamova/tashkent-apartment-price-predictor/blob/main/demo.ipynb)
 
+## **[Open the live apartment market website](https://tashkent-apartment-price-predictor.streamlit.app)**
+
 **[View presentation](presentation/README.md)** · **[PowerPoint](presentation/Tashkent_Apartment_Price_Defense.pptx)** · **[PDF](presentation/Tashkent_Apartment_Price_Defense.pdf)**
 
 ## Interactive website demo
@@ -14,8 +16,9 @@ python -m pip install -r requirements.txt
 streamlit run app.py
 ```
 
-For a public URL, sign in to [Streamlit Community Cloud](https://share.streamlit.io/), choose
-**Create app**, and enter:
+The public deployment is live at
+**[tashkent-apartment-price-predictor.streamlit.app](https://tashkent-apartment-price-predictor.streamlit.app)**.
+To reproduce the deployment in Streamlit Community Cloud, choose **Create app** and enter:
 
 - Repository: `DilnuraHamdamova/tashkent-apartment-price-predictor`
 - Branch: `main`
