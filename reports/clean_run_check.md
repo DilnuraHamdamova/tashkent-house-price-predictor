@@ -14,7 +14,7 @@ Date checked: 22 August 2026 (Asia/Samarkand)
 
    The protected-test split contained 835 rows in 768 groups. Random Forest was selected from development cross-validation and achieved MAE `$27,195`, RMSE `$58,887`, R² `0.681`, and MAPE `24.58%` on the protected test set. The median baseline MAE was `$50,900`.
 4. Confirmed that identical feature fingerprints do not cross either the development/test boundary or cross-validation folds: both recorded overlap checks equal zero.
-5. Loaded `artifacts/house_price_pipeline.joblib` and ran:
+5. Loaded `artifacts/apartment_price_pipeline.joblib` and ran:
 
    ```bash
    python -m src.predict --district Chilonzor --size 70 --rooms 3 \
@@ -30,12 +30,12 @@ Date checked: 22 August 2026 (Asia/Samarkand)
 
 The repository's current code, notebooks, dataset snapshot, model artifact, and instructions pass
 local verification. GitHub Actions run
-[32561644942](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/actions/runs/32561644942)
+[32561644942](https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor/actions/runs/32561644942)
 checked commit `e31bc95` and completed successfully on 22 August 2026.
 
 A named peer or mentor has also not yet recorded a browser-based Google Colab run. Before defense, one reviewer should click the README Colab badge, choose **Runtime -> Run all**, record the date/result here, and report any hidden-state or access issue.
 
-- Current-revision public CI URL: https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/actions/runs/32561644942
+- Current-revision public CI URL: https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor/actions/runs/32561644942
 - Peer/reviewer: ____________________
 - Date: ____________________
 - Colab result: PASS / FAIL

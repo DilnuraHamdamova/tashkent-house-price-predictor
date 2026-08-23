@@ -15,7 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train the Tashkent house price predictor")
+    parser = argparse.ArgumentParser(description="Train the Tashkent apartment price predictor")
     parser.add_argument(
         "--data",
         type=Path,
@@ -25,7 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        default=PROJECT_ROOT / "artifacts" / "house_price_pipeline.joblib",
+        default=PROJECT_ROOT / "artifacts" / "apartment_price_pipeline.joblib",
         help="Serialized model pipeline path",
     )
     parser.add_argument(

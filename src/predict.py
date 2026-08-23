@@ -25,7 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--model",
         type=Path,
-        default=PROJECT_ROOT / "artifacts" / "house_price_pipeline.joblib",
+        default=PROJECT_ROOT / "artifacts" / "apartment_price_pipeline.joblib",
         help="Trained model pipeline path",
     )
     return parser.parse_args()

@@ -1,9 +1,9 @@
 # Tashkent Apartment Listing Price Predictor
 
-[![CI](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/actions/workflows/ci.yml/badge.svg)](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/actions/workflows/ci.yml)
-[![Open demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/DilnuraHamdamova/tashkent-house-price-predictor/blob/main/demo.ipynb)
+[![CI](https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor/actions/workflows/ci.yml/badge.svg)](https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor/actions/workflows/ci.yml)
+[![Open demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/DilnuraHamdamova/tashkent-apartment-price-predictor/blob/main/demo.ipynb)
 
-**[View presentation](presentation/README.md)** · **[PowerPoint](presentation/Tashkent_House_Price_Defense.pptx)** · **[PDF](presentation/Tashkent_House_Price_Defense.pdf)**
+**[View presentation](presentation/README.md)** · **[PowerPoint](presentation/Tashkent_Apartment_Price_Defense.pptx)** · **[PDF](presentation/Tashkent_Apartment_Price_Defense.pdf)**
 
 ## Interactive website demo
 
@@ -17,7 +17,7 @@ streamlit run app.py
 For a public URL, sign in to [Streamlit Community Cloud](https://share.streamlit.io/), choose
 **Create app**, and enter:
 
-- Repository: `DilnuraHamdamova/tashkent-house-price-predictor`
+- Repository: `DilnuraHamdamova/tashkent-apartment-price-predictor`
 - Branch: `main`
 - Main file path: `app.py`
 
@@ -108,8 +108,8 @@ Shayhontohur test MAE about $64,541. Full evidence is in `artifacts/metrics.json
 Python 3.10+ is required.
 
 ```bash
-git clone https://github.com/DilnuraHamdamova/tashkent-house-price-predictor.git
-cd tashkent-house-price-predictor
+git clone https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor.git
+cd tashkent-apartment-price-predictor
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 python -m pip install -r requirements.txt

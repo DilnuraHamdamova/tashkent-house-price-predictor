@@ -2,9 +2,9 @@
 
 ## Open or download
 
-- **[Open the complete presentation as one PDF](Tashkent_House_Price_Defense.pdf)**
-- **[Download the complete PDF](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/raw/refs/heads/main/presentation/Tashkent_House_Price_Defense.pdf)**
-- [Download the editable PowerPoint](https://github.com/DilnuraHamdamova/tashkent-house-price-predictor/raw/refs/heads/main/presentation/Tashkent_House_Price_Defense.pptx)
+- **[Open the complete presentation as one PDF](Tashkent_Apartment_Price_Defense.pdf)**
+- **[Download the complete PDF](https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor/raw/refs/heads/main/presentation/Tashkent_Apartment_Price_Defense.pdf)**
+- [Download the editable PowerPoint](https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor/raw/refs/heads/main/presentation/Tashkent_Apartment_Price_Defense.pptx)
 - [Download the printable exact speech](Tashkent_Apartment_Pitch_Speech.docx)
 - [Open the printable speech PDF](Tashkent_Apartment_Pitch_Speech.pdf)
 

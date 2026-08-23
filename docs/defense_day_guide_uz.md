@@ -5,7 +5,7 @@ Bu fayl EXTC4 worksheet tartibiga mos. Asosiy prezentatsiyada 1–7-slaydlar ish
 
 ## Pitchdan oldin ochib qo‘yiladigan fayllar
 
-1. `presentation/Tashkent_House_Price_Defense.pptx` — Slide Show rejimida.
+1. `presentation/Tashkent_Apartment_Price_Defense.pptx` — Slide Show rejimida.
 2. `demo.ipynb` — Colab’da ochilgan va runtime ulangan.
 3. `docs/capstone_evidence_matrix.md` — dalil so‘ralsa ko‘rsatish uchun.
 4. `reports/model_comparison.csv`, `reports/protected_test_metrics.csv` va
@@ -190,4 +190,3 @@ Bu joylar pitchdan oldin taxmin bilan to‘ldirilmaydi.
 - [x] Kamida uchta emas, oltitadan ko‘p Q&A javobi tayyor.
 - [ ] Haqiqiy pitch vaqti va savol pitchdan keyin yoziladi.
 - [ ] Peer/mentor/CI kabi tashqi dalillar faqat real bajarilgach belgilanadi.
-

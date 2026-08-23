@@ -5,7 +5,7 @@
 - **Student:** Dilnura Hamdamova
 - **Track:** Individual Project Track
 - **Title:** Tashkent Apartment Listing Price Predictor
-- **Repository:** https://github.com/DilnuraHamdamova/tashkent-house-price-predictor
+- **Repository:** https://github.com/DilnuraHamdamova/tashkent-apartment-price-predictor
 - **ML task:** supervised tabular regression
 - **Primary users:** buyers, sellers, agents, and analysts comparing current advertisements
 

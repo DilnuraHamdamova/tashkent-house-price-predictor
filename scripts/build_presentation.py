@@ -11,7 +11,7 @@ from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.util import Inches, Pt
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "presentation" / "Tashkent_House_Price_Defense.pptx"
+OUTPUT = ROOT / "presentation" / "Tashkent_Apartment_Price_Defense.pptx"
 
 NAVY = RGBColor(5, 24, 70)
 BLUE = RGBColor(13, 91, 255)
@@ -596,7 +596,7 @@ def build() -> Path:
         )
     add_text(
         slide,
-        "Source proof: src/data.py + src/model.py + artifacts/house_price_pipeline.joblib",
+        "Source proof: src/data.py + src/model.py + artifacts/apartment_price_pipeline.joblib",
         1.7,
         6.60,
         9.9,

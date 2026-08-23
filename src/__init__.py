@@ -1,4 +1,4 @@
-"""Tashkent house price prediction package."""
+"""Tashkent apartment asking-price prediction package."""
 
 from .data import FEATURE_COLUMNS, TARGET_COLUMN, make_features
 

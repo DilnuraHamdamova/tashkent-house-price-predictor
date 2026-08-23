@@ -6,7 +6,7 @@ import streamlit as st
 
 from src.model import load_artifact, predict_price
 
-ARTIFACT_PATH = Path("artifacts/house_price_pipeline.joblib")
+ARTIFACT_PATH = Path("artifacts/apartment_price_pipeline.joblib")
 
 st.set_page_config(
     page_title="Tashkent Apartment Price Predictor",
